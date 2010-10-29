@@ -55,9 +55,11 @@ module MongoidExt
         select = opts.delete(:select) || self.fields.keys
 
         query = Mongoid::Criteria.new(self)
-        query.paginate(opts)
+        query.where(:_keywords.in => regex).all(opts)
 
-        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.selector.merge(:conditions => {"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
+        conds = query.selector
+
+        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, conds, {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
 
         pagination = Paginator.new(results["total_entries"], page, limit)
 
