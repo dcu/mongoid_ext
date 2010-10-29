@@ -38,7 +38,7 @@ module MongoidExt
 
     module ClassMethods
       def gridfs
-        @gridfs ||= Mongo::Grid.new(self.database)
+        @gridfs ||= Mongo::Grid.new(self.db)
       end
 
       def file_list(name)
@@ -104,8 +104,8 @@ module MongoidExt
           object.save(:validate => false)
         end
 
-        self.database.drop_collection(cname+".files")
-        self.database.drop_collection(cname+".chunks")
+        self.db.drop_collection(cname+".files")
+        self.db.drop_collection(cname+".chunks")
       end
 
       private
@@ -115,8 +115,8 @@ module MongoidExt
     def upgrade_file_key(key, save = true)
       cname = self.collection.name
 
-      files = self.database["#{cname}.files"]
-      chunks = self.database["#{cname}.chunks"]
+      files = self.db["#{cname}.files"]
+      chunks = self.db["#{cname}.chunks"]
 
       fname = self["_#{key}"] rescue nil
       return if fname.blank?

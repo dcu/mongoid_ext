@@ -54,9 +54,10 @@ module MongoidExt
         page = opts.delete(:page) || 1
         select = opts.delete(:select) || self.fields.keys
 
-        query = Plucky::Query.new(self.collection, opts)
+        query = Mongoid::Criteria.new(self)
+        query.paginate(opts)
 
-        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.criteria.source.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
+        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.selector.merge(:conditions => {"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
 
         pagination = Paginator.new(results["total_entries"], page, limit)
 
