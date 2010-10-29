@@ -10,7 +10,8 @@ begin
     gem.email = "krawek@gmail.com"
     gem.homepage = "http://github.com/dcu/mongoid_ext"
     gem.authors = ["David A. Cuadrado"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "shoulda", "~> 2.11.3"
+    gem.add_development_dependency "jnunemaker-matchy", "~> 0.4"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

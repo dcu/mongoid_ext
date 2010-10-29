@@ -2,7 +2,7 @@ module MongoidExt
   class File
     include Mongoid::Document
 
-    field :_id, :type => String
+    key :_id, :type => String
     field :name, :type => String
     field :extension, :type => String
     field :content_type, :type => String

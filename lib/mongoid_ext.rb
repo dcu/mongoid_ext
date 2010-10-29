@@ -4,7 +4,7 @@ if RUBY_VERSION =~ /^1\.8/
   $KCODE = 'u'
 end
 
-require 'mongo_mapper'
+require 'mongoid'
 require 'uuidtools'
 require 'active_support/inflector'
 

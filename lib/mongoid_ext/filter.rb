@@ -52,7 +52,7 @@ module MongoidExt
         min_score = opts.delete(:min_score) || 0.0
         limit = opts.delete(:per_page) || 25
         page = opts.delete(:page) || 1
-        select = opts.delete(:select) || self.keys.keys
+        select = opts.delete(:select) || self.fields.keys
 
         query = Plucky::Query.new(self.collection, opts)
 
