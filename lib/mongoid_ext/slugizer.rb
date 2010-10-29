@@ -5,7 +5,7 @@ module MongoidExt
         extend ClassMethods
         extend Finder
 
-        key :slug, String, :index => true
+        field :slug, :type => String, :index => true
       end
     end
 
@@ -39,7 +39,7 @@ module MongoidExt
       def slug_key(key = :name, options = {})
         @slug_options ||= options
         @callback_type ||= begin
-          type = options[:callback_type] || :before_validation_on_create
+          type = options[:callback_type] || :before_validation
 
           send(type, :generate_slug)
 
@@ -55,15 +55,11 @@ module MongoidExt
 
     module Finder
       def by_slug(id, options = {})
-        self.find_by_slug(id, options) || self.first(options.merge({:_id => id}))
+        self.first(options.merge(:conditions => {:slug => id})) || self.first(options.merge(:conditions => {:_id => id}))
       end
       alias :find_by_slug_or_id :by_slug
     end
   end
 end
 
-if defined?(MongoMapper::Associations)
-  MongoMapper::Associations::Proxy.send(:include, MongoidExt::Slugizer::Finder)
-else
-  MongoMapper::Plugins::Associations::Proxy.send(:include, MongoidExt::Slugizer::Finder)
-end
+Mongoid::Criteria.send(:include, MongoidExt::Slugizer::Finder)
