@@ -11,8 +11,11 @@ class OpenStructTest < Test::Unit::TestCase
     end
 
     should "allow to add new keys" do
-      @config.entries.new_key = "my new key"
-      @config.save!
+      entries = @config.entries
+      entries.new_key = "my new key"
+      @config.entries = entries
+      @config.save
+
       from_db.entries.new_key.should == "my new key"
     end
   end
