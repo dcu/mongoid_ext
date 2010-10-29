@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+
+begin
+  require 'mongoid'
+  require 'irb'
+rescue LoadError
+  require 'rubygems'
+  retry
+end
+
+IRB.setup(nil)
+irb = IRB::Irb.new
+
+IRB.conf[:MAIN_CONTEXT] = irb.context
+
+irb.context.evaluate("require 'irb/completion'", 0)
+irb.context.evaluate(%@
+include Mongoid
+
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db("test")
+end
+$db = Mongoid.config.database
+
+@, 0)
+
+puts %@
+Welcome to the Mongoid Console!
+
+Example 1: Using the driver
+  things = $db.collection("things")
+  things.insert("name" => "Raw Thing")
+  things.insert("name" => "Another Thing", "date" => Time.now)
+
+  cursor = things.find("name" => "Raw Thing")
+  puts cursor.next_object.inspect
+
+Example 2: Defining documents
+  class Person
+    include Mongoid::Document
+    field :first_name
+    field :middle_initial
+    field :last_name
+  end
+
+Example 3: Associations
+  class Person
+    include Mongoid::Document
+    references_one :policy
+    references_many :prescriptions
+    references_many :preferences, :stored_as => :array, :inverse_of => :people
+  end
+
+  class Policy
+    include Mongoid::Document
+    referenced_in :person
+  end
+
+  class Prescription
+    include Mongoid::Document
+    referenced_in :person
+  end
+
+  class Preference
+    include Mongoid::Document
+    references_many :people, :stored_as => :array, :inverse_of => :preferences
+  end
+
+  person = Person.create
+  policy = Policy.create
+  prescription = Prescription.create
+
+  person.policy = policy
+  person.prescriptions = [prescription]
+@
+
+trap("SIGINT") do
+  irb.signal_handle
+end
+
+catch(:IRB_EXIT) do
+  irb.eval_input
+end
+
