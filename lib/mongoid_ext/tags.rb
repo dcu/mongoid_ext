@@ -13,10 +13,9 @@ module MongoidExt
         self.db.eval("function(collection, q,l) { return tag_cloud(collection, q,l); }", self.collection_name, conditions, limit)
       end
 
-      # Model.find_with_tags("budget", "big", :limit => 4)
+      # Model.find_with_tags("budget", "big").limit(4)
       def find_with_tags(*tags)
-        options = tags.extract_options!
-        self.all(options.merge(:conditions => {:tags => tags}))
+        self.all(:conditions => {:tags.in => tags})
       end
 
       def find_tags(regex, conditions = {}, limit = 30)

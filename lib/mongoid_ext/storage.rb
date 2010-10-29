@@ -44,9 +44,7 @@ module MongoidExt
       def file_list(name)
         key name, MongoidExt::FileList
         define_method(name) do
-          list = self[name]
-          list.parent_document = self
-          list
+          self[name]
         end
 
         after_create do |doc|

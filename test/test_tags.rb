@@ -28,8 +28,8 @@ class TestTags < Test::Unit::TestCase
     end
 
     should "find blogpost that include the given tags" do
-      BlogPost.find_with_tags("mongodb").should == [@blogpost2]
-      posts = BlogPost.find_with_tags("mongodb", "linux")
+      BlogPost.find_with_tags("mongodb").to_a.should == [@blogpost2]
+      posts = BlogPost.find_with_tags("mongodb", "linux").to_a
       posts.should include(@blogpost)
       posts.should include(@blogpost2)
       posts.size.should == 2
