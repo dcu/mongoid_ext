@@ -16,7 +16,7 @@ module MongoidExt
       # Model.find_with_tags("budget", "big", :limit => 4)
       def find_with_tags(*tags)
         options = tags.extract_options!
-        self.all(options.merge(:tags => tags))
+        self.all(options.merge(:conditions => {:tags => tags}))
       end
 
       def find_tags(regex, conditions = {}, limit = 30)
