@@ -10,8 +10,8 @@ module MongoidExt
       klass.class_eval do
         extend ClassMethods
 
-        key :_keywords, Set
-        ensure_index :_keywords
+        field :_keywords, :type => Set
+        index :_keywords
 
         before_save :_update_keywords
 
