@@ -42,17 +42,20 @@ module MongoidExt
       end
 
       def file_list(name)
-        key name, MongoidExt::FileList
+        field name, :type => MongoidExt::FileList, :default => MongoidExt::FileList.new
         define_method(name) do
-          self[name]
+          list = self[name]
+          list.parent_document = self
+          list
         end
 
-        after_create do |doc|
-          doc.send(name).sync_files
-          doc.save(:validate => false)
+        set_callback(:create, :after) do |doc|
+          l = doc.send(name)
+          l.sync_files
+          doc.save
         end
 
-        before_destroy do |doc|
+        set_callback(:destroy, :before) do |doc|
           doc.send(name).destroy_files
         end
       end
@@ -89,56 +92,7 @@ module MongoidExt
           send(opts[:in]).has_key?(name.to_s)
         end
       end
-
-      # NOTE: this method will be removed on next release
-      def upgrade_file_keys(*keys)
-        cname = self.collection_name
-
-        self.find_each do |object|
-          keys.each do |key|
-            object.upgrade_file_key(key, false)
-          end
-
-          object.save(:validate => false)
-        end
-
-        self.db.drop_collection(cname+".files")
-        self.db.drop_collection(cname+".chunks")
-      end
-
       private
-    end
-
-    # NOTE: this method will be removed on next release
-    def upgrade_file_key(key, save = true)
-      cname = self.collection.name
-
-      files = self.db["#{cname}.files"]
-      chunks = self.db["#{cname}.chunks"]
-
-      fname = self["_#{key}"] rescue nil
-      return if fname.blank?
-
-      begin
-        n = Mongo::GridIO.new(files, chunks, fname, "r", :query => {:filename => fname})
-
-        v = n.read
-
-        if !v.empty?
-          data = StringIO.new(v)
-          self.put_file(key, data)
-          self["_#{key}"] = nil
-
-          self.save(:validate => false) if save
-        end
-      rescue => e
-        puts "ERROR: #{e}"
-        puts e.backtrace.join("\t\n")
-        return
-      end
-
-      files.remove(:_id => fname)
-      chunks.remove(:_id => fname)
     end
   end
 end

@@ -2,12 +2,14 @@ module MongoidExt
   class File
     include Mongoid::Document
 
-    key :_id, :type => String
     field :name, :type => String
     field :extension, :type => String
     field :content_type, :type => String
+    field :file_key, :type => String, :default => BSON::ObjectId.new.to_s
 
     alias :filename :name
+
+    attr_accessor :_root_document
 
     def put(filename, io, options = {})
       options[:_id] = grid_filename
@@ -50,7 +52,7 @@ module MongoidExt
     end
 
     def grid_filename
-      @grid_filename ||= "#{_root_document.collection.name}/#{self.id}"
+      @grid_filename ||= "#{_root_document.collection.name}/#{self.file_key}"
     end
 
     def mime_type

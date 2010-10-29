@@ -4,7 +4,7 @@ module MongoidExt
 
     def self.set(value)
       result = {}
-      value.each do |k, v|
+      (value||{}).each do |k, v|
         result[k] = v.to_mongo
       end
 
@@ -23,7 +23,7 @@ module MongoidExt
     end
 
     def put(id, io, metadata = {})
-      if !parent_document.new?
+      if !parent_document.new_record?
         filename = id
         if io.respond_to?(:original_filename)
           filename = io.original_filename
@@ -48,7 +48,7 @@ module MongoidExt
       if file.nil?
         file = self[id] = MongoidExt::File.new
       end
-      file._parent_document = parent_document
+      file._root_document = parent_document
       file
     end
 
