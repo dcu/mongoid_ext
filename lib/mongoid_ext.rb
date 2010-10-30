@@ -39,6 +39,8 @@ require 'mongoid_ext/slugizer'
 # tags
 require 'mongoid_ext/tags'
 
+require 'mongoid_ext/random'
+
 module MongoidExt
   def self.init
     load_jsfiles(::File.dirname(__FILE__)+"/mongoid_ext/js")
