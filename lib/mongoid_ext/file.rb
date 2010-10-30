@@ -1,15 +1,37 @@
 module MongoidExt
-  class File
-    include Mongoid::Document
+  class File < Hash
+    attr_accessor :_root_document
 
-    field :name, :type => String
-    field :extension, :type => String
-    field :content_type, :type => String
-    field :file_key, :type => String, :default => BSON::ObjectId.new.to_s
+    def self.from_hash(other)
+      n = self.new
+      other.each do |k,v|
+        n[k.to_s] = v
+      end
+      n
+    end
 
+    def initialize(*args)
+      super(*args)
+      self["_id"] ||= BSON::ObjectId.new.to_s
+    end
+
+    def id
+      self["_id"]
+    end
+    alias :_id :id
+
+    def name
+      self["name"]
+    end
     alias :filename :name
 
-    attr_accessor :_root_document
+    def extension
+      self["extension"]
+    end
+
+    def content_type
+      self["content_type"]
+    end
 
     def put(filename, io, options = {})
       options[:_id] = grid_filename
@@ -17,9 +39,9 @@ module MongoidExt
       options[:metadata] ||= {}
       options[:metadata][:collection] = _root_document.collection.name
 
-      self.name = filename
+      self["name"] = filename
       if filename =~ /\.([\w]{2,4})$/
-        self.extension = $1
+        self["extension"] = $1
       end
 
       if io.kind_of?(String)
@@ -28,8 +50,8 @@ module MongoidExt
 
       if defined?(Magic) && Magic.respond_to?(:guess_string_mime_type)
         data = io.read(256) # be nice with memory usage
-        self.content_type = options[:content_type] = Magic.guess_string_mime_type(data.to_s)
-        self.extension ||= options[:content_type].to_s.split("/").last.split("-").last
+        self["content_type"] = options[:content_type] = Magic.guess_string_mime_type(data.to_s)
+        self["extension"] ||= options[:content_type].to_s.split("/").last.split("-").last
 
         if io.respond_to?(:rewind)
           io.rewind
@@ -52,7 +74,7 @@ module MongoidExt
     end
 
     def grid_filename
-      @grid_filename ||= "#{_root_document.collection.name}/#{self.file_key}"
+      @grid_filename ||= "#{_root_document.collection.name}/#{self.id}"
     end
 
     def mime_type

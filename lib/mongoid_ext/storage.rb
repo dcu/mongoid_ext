@@ -42,9 +42,16 @@ module MongoidExt
       end
 
       def file_list(name)
-        field name, :type => MongoidExt::FileList, :default => MongoidExt::FileList.new
+        field name, :type => MongoidExt::FileList
         define_method(name) do
           list = self[name]
+
+          if list.nil?
+            list = self[name] = MongoidExt::FileList.new
+          elsif list.class == BSON::OrderedHash || list.class == Hash
+            list = MongoidExt::FileList.from_hash(list)
+          end
+
           list.parent_document = self
           list
         end
@@ -52,7 +59,7 @@ module MongoidExt
         set_callback(:create, :after) do |doc|
           l = doc.send(name)
           l.sync_files
-          doc.save
+          doc.save(:validate => false)
         end
 
         set_callback(:destroy, :before) do |doc|

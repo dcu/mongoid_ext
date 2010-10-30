@@ -2,24 +2,12 @@ module MongoidExt
   class FileList < Hash
     attr_accessor :parent_document
 
-    def self.set(value)
-      result = {}
-      (value||{}).each do |k, v|
-        result[k] = v.to_mongo
+    def self.from_hash(other)
+      n = self.new
+      other.each do |k,v|
+        n[k] = v
       end
-
-      result
-    end
-
-    def self.get(value)
-      return value if value.kind_of?(self)
-
-      result = FileList.new
-      (value||{}).each do |k, v|
-        result[k] = v.kind_of?(MongoidExt::File) ? v : MongoidExt::File.new(v)
-      end
-
-      result
+      n
     end
 
     def put(id, io, metadata = {})
@@ -44,10 +32,15 @@ module MongoidExt
     end
 
     def get(id)
+      id = id.gsub(".", "_")
       file = self[id]
+
       if file.nil?
         file = self[id] = MongoidExt::File.new
+      elsif file.class == BSON::OrderedHash
+        file = self[id] = MongoidExt::File.from_hash(file)
       end
+
       file._root_document = parent_document
       file
     end

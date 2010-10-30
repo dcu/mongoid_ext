@@ -2,7 +2,7 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 begin
-  require 'mongoid'
+  require 'mongoid_ext'
   require 'irb'
 rescue LoadError
   require 'rubygems'

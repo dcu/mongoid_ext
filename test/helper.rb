@@ -26,3 +26,5 @@ class Test::Unit::TestCase
 end
 
 MongoidExt.init
+
+$VERBOSE=nil
