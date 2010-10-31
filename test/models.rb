@@ -59,7 +59,7 @@ class Entry
   include Mongoid::Document
   include MongoidExt::Random
 
-  key :v, :type => Integer
+  field :v, :type => Integer
 end
 Entry.delete_all
 100.times {|v| Entry.create(:v => v)}
