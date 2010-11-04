@@ -16,12 +16,12 @@ module MongoidExt
         _apply_modifier('$inc', conditions, update)
       end
 
-      def put(conditions, update) # set() is already taken :(
+      def override(conditions, update) # set() is already taken :(
         _apply_modifier('$set', conditions, update)
       end
 
       def unset(conditions, update)
-        _apply_modifier('$set', conditions, update)
+        _apply_modifier('$unset', conditions, update)
       end
 
       def push(conditions, update)
@@ -56,15 +56,15 @@ module MongoidExt
 
     module InstanceMethods
       def unset(update)
-        self.class.unset(:_id => id, update)
+        self.class.unset({:_id => id}, update)
       end
 
       def decrement(update)
         self.class.decrement({:_id => id}, update)
       end
 
-      def put(update)
-        self.class.set({:_id => id}, update)
+      def override(update)
+        self.class.override({:_id => id}, update)
       end
 
       def push(update)

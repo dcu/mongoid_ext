@@ -60,6 +60,7 @@ class Entry
   include MongoidExt::Random
 
   field :v, :type => Integer
+  field :a, :type => Array
 end
 Entry.delete_all
 100.times {|v| Entry.create(:v => v)}
