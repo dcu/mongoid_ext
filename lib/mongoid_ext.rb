@@ -43,6 +43,7 @@ require 'mongoid_ext/random'
 require 'mongoid_ext/mongo_mapper'
 require 'mongoid_ext/document_ext'
 require 'mongoid_ext/criteria_ext'
+require 'mongoid_ext/modifiers'
 
 module MongoidExt
   def self.init
