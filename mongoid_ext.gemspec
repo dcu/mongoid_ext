@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-11-04}
+  s.date = %q{2010-11-06}
   s.default_executable = %q{mongoid_console}
   s.description = %q{TODO: longer description of your gem}
   s.email = %q{krawek@gmail.com}
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     ".document",
      ".gitignore",
      "Gemfile",
+     "Gemfile.lock",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -37,6 +38,7 @@ Gem::Specification.new do |s|
      "lib/mongoid_ext/js/filter.js",
      "lib/mongoid_ext/js/find_tags.js",
      "lib/mongoid_ext/js/tag_cloud.js",
+     "lib/mongoid_ext/modifiers.rb",
      "lib/mongoid_ext/mongo_mapper.rb",
      "lib/mongoid_ext/paginator.rb",
      "lib/mongoid_ext/random.rb",
@@ -44,13 +46,16 @@ Gem::Specification.new do |s|
      "lib/mongoid_ext/storage.rb",
      "lib/mongoid_ext/tags.rb",
      "lib/mongoid_ext/types/open_struct.rb",
+     "lib/mongoid_ext/types/set.rb",
      "lib/mongoid_ext/types/timestamp.rb",
      "lib/mongoid_ext/types/translation.rb",
      "lib/mongoid_ext/update.rb",
+     "mongoid_ext.gemspec",
      "test/helper.rb",
      "test/models.rb",
      "test/support/custom_matchers.rb",
      "test/test_filter.rb",
+     "test/test_modifiers.rb",
      "test/test_random.rb",
      "test/test_slugizer.rb",
      "test/test_storage.rb",
@@ -67,6 +72,7 @@ Gem::Specification.new do |s|
   s.summary = %q{TODO: one-line summary of your gem}
   s.test_files = [
     "test/test_tags.rb",
+     "test/test_modifiers.rb",
      "test/test_storage.rb",
      "test/test_filter.rb",
      "test/support/custom_matchers.rb",
@@ -91,7 +97,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<mocha>, ["~> 0.9.4"])
       s.add_development_dependency(%q<timecop>, [">= 0"])
       s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-      s.add_runtime_dependency(%q<uuidtools>, ["~> 2.0.0"])
+      s.add_runtime_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_runtime_dependency(%q<i18n>, ["~> 0.4.1"])
       s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3"])
     else
@@ -101,7 +107,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<mocha>, ["~> 0.9.4"])
       s.add_dependency(%q<timecop>, [">= 0"])
       s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-      s.add_dependency(%q<uuidtools>, ["~> 2.0.0"])
+      s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_dependency(%q<i18n>, ["~> 0.4.1"])
       s.add_dependency(%q<tzinfo>, ["~> 0.3"])
     end
@@ -112,7 +118,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<mocha>, ["~> 0.9.4"])
     s.add_dependency(%q<timecop>, [">= 0"])
     s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-    s.add_dependency(%q<uuidtools>, ["~> 2.0.0"])
+    s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
     s.add_dependency(%q<i18n>, ["~> 0.4.1"])
     s.add_dependency(%q<tzinfo>, ["~> 0.3"])
   end

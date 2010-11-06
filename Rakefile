@@ -17,7 +17,7 @@ begin
     gem.add_development_dependency 'timecop'
 
     gem.add_dependency 'mongoid', '~> 2.0.0.beta.20'
-    gem.add_dependency 'uuidtools', '~> 2.0.0'
+    gem.add_dependency 'uuidtools', '>= 2.1.1'
     gem.add_dependency 'i18n', '~> 0.4.1'
     gem.add_dependency 'tzinfo', '~> 0.3'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
