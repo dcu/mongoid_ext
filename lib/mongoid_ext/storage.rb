@@ -83,7 +83,7 @@ module MongoidExt
             end
           end
 
-          if self.errors.on(name).blank?
+          if self.errors[name].blank?
             send(opts[:in]).get(name.to_s).put(name.to_s, file)
           else
             # we store the errors here because we want to validate before storing the file
