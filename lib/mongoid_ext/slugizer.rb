@@ -55,7 +55,7 @@ module MongoidExt
 
     module Finder
       def by_slug(id, options = {})
-        self.first(options.merge(:conditions => {:slug => id})) || self.first(options.merge(:conditions => {:_id => id}))
+        self.where(options.merge({:slug => id})).first || self.where(options.merge({:_id => id})).first
       end
       alias :find_by_slug_or_id :by_slug
     end
