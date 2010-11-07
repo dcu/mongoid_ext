@@ -4,7 +4,7 @@ module MongoidExt
       klass.class_eval do
         extend ClassMethods
 
-        field :tags, :type => Array, :index => true
+        field :tags, :type => Array, :index => true, :default => []
       end
     end
 
