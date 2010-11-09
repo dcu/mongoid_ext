@@ -7,7 +7,7 @@ module MongoidExt
 
     module ClassMethods
       def find!(*args)
-        find(*args) || raise(Errors::DocumentNotFound.new(self, args))
+        find(*args) || raise(Mongoid::Errors::DocumentNotFound.new(self, args))
       end
 
     end
