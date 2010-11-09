@@ -59,6 +59,10 @@ module MongoidExt
         self.class.unset({:_id => id}, update)
       end
 
+      def increment(update)
+        self.class.decrement({:_id => id}, update)
+      end
+
       def decrement(update)
         self.class.decrement({:_id => id}, update)
       end
