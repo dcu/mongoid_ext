@@ -56,8 +56,7 @@ module MongoidExt
 
     def destroy_files
       self.delete_if do |id, file|
-        file._parent_document = parent_document
-        file.delete
+        get(id).delete
       end
     end
   end
