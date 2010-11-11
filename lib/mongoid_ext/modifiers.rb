@@ -60,7 +60,7 @@ module MongoidExt
       end
 
       def increment(update)
-        self.class.decrement({:_id => id}, update)
+        self.class.increment({:_id => id}, update)
       end
 
       def decrement(update)
