@@ -21,6 +21,7 @@ require 'mongoid_ext/types/open_struct'
 require 'mongoid_ext/types/timestamp'
 require 'mongoid_ext/types/translation'
 require 'mongoid_ext/types/set'
+require 'mongoid_ext/types/embedded_hash'
 
 # storage
 require 'mongoid_ext/file_list'

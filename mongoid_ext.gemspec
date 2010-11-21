@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-11-12}
+  s.date = %q{2010-11-20}
   s.default_executable = %q{mongoid_console}
   s.description = %q{mongoid plugins}
   s.email = %q{krawek@gmail.com}
@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
      "lib/mongoid_ext/slugizer.rb",
      "lib/mongoid_ext/storage.rb",
      "lib/mongoid_ext/tags.rb",
+     "lib/mongoid_ext/types/embedded_hash.rb",
      "lib/mongoid_ext/types/open_struct.rb",
      "lib/mongoid_ext/types/set.rb",
      "lib/mongoid_ext/types/timestamp.rb",

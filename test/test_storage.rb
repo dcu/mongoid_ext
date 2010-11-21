@@ -34,6 +34,13 @@ class StorageTest < Test::Unit::TestCase
         @avatar = Avatar.new
       end
 
+      should "store the data correctly" do
+        @avatar.data = @data
+        @avatar.save
+        @avatar = Avatar.find(@avatar.id)
+        @avatar.data.read.should == "my avatar image"
+      end
+
       should "store the file after saving" do
         @avatar.put_file("an_avatar.png", @data)
         @avatar.save

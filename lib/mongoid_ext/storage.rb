@@ -49,7 +49,7 @@ module MongoidExt
           if list.nil?
             list = self[name] = MongoidExt::FileList.new
           elsif list.class == BSON::OrderedHash || list.class == Hash
-            list = MongoidExt::FileList.from_hash(list)
+            list = self[name] = MongoidExt::FileList.new(list)
           end
 
           list.parent_document = self

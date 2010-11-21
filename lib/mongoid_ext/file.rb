@@ -1,37 +1,12 @@
 module MongoidExt
-  class File < Hash
+  class File < EmbeddedHash
     attr_accessor :_root_document
 
-    def self.from_hash(other)
-      n = self.new
-      other.each do |k,v|
-        n[k.to_s] = v
-      end
-      n
-    end
+    field :name, :type => String
+    field :extension, :type => String
+    field :content_type, :type => String
 
-    def initialize(*args)
-      super(*args)
-      self["_id"] ||= BSON::ObjectId.new.to_s
-    end
-
-    def id
-      self["_id"]
-    end
-    alias :_id :id
-
-    def name
-      self["name"]
-    end
     alias :filename :name
-
-    def extension
-      self["extension"]
-    end
-
-    def content_type
-      self["content_type"]
-    end
 
     def put(filename, io, options = {})
       options[:_id] = grid_filename
