@@ -55,7 +55,7 @@ module MongoidExt
         select = opts.delete(:select) || self.fields.keys
 
         query = Mongoid::Criteria.new(self)
-        query.where(:_keywords.in => regex).all(opts)
+        query.where(opts.merge(:_keywords.in => regex)).all
 
         conds = query.selector
 

@@ -58,7 +58,7 @@ module MongoidExt
       name = ::File.basename(js_path, ".js")
 
       # HACK: looks like ruby driver doesn't support this
-      Mongoid.config.database.eval("db.system.js.save({_id: '#{name}', value: #{code}})")
+      Mongoid.master.eval("db.system.js.save({_id: '#{name}', value: #{code}})")
     end
   end
 end
