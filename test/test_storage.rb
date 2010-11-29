@@ -90,9 +90,21 @@ class StorageTest < Test::Unit::TestCase
       @avatar.put_file("file2", StringIO.new("data2"))
       @avatar.put_file("file3", StringIO.new("data3"))
       file_names = @avatar.files.map { |f| f.filename }
+      file_names.size.should == 3
       file_names.should include("file1")
       file_names.should include("file2")
       file_names.should include("file3")
     end
+
+   should "iterate the list of files" do
+      @avatar.put_file("file1", StringIO.new("data1"))
+      @avatar.put_file("file2", StringIO.new("data2"))
+      @avatar.put_file("file3", StringIO.new("data3"))
+      file_names = %w[file1 file2 file3]
+      @avatar.file_list.each_file do |key, file|
+        file_names.should include key
+        file_names.should include file.filename
+      end
+   end
   end
 end

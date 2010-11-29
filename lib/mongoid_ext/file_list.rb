@@ -20,7 +20,16 @@ module MongoidExt
     end
 
     def files
-      self.values.map {|v| get(v) }
+      ids = self.keys
+      ids.delete("_id")
+      ids.map {|v| get(v) }
+    end
+
+    def each_file(&block)
+      (self.keys-["_id"]).each do |key|
+        file = self.get(key)
+        yield key, file
+      end
     end
 
     def get(id)
@@ -31,7 +40,6 @@ module MongoidExt
 
       id = id.to_s.gsub(".", "_")
       file = self[id]
-
       if file.nil?
         file = self[id] = MongoidExt::File.new
       elsif file.class == BSON::OrderedHash
