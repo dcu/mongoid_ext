@@ -19,6 +19,11 @@ module MongoidExt
       file_list.get(name)
     end
 
+    def delete_file(id, options = {})
+      file_list = send(options.delete(:in) || :file_list)
+      file_list.delete(id)
+    end
+
     def files(options = {})
       file_list = send(options.delete(:in) || :file_list)
       file_list.files
