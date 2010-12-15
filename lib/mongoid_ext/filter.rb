@@ -33,20 +33,10 @@ module MongoidExt
 
       def filter(query, opts = {})
         stemmer = nil
-        original_words = Set.new(query.downcase.split)
         language = opts.delete(:language) || 'en'
 
-        stemmed = []
-        if defined?(Lingua)
+        if defined?(Lingua::Stemmer)
           stemmer = MongoidExt::Filter.build_stemmer(language)
-          original_words.each do |word|
-            stemmed_word = stemmer.stem(word)
-            stemmed << stemmed_word unless original_words.include?(stemmed_word)
-          end
-        end
-
-        regex = (original_words+stemmed).map do |k|
-          /^#{Regexp.escape(k)}/
         end
 
         min_score = opts.delete(:min_score) || 0.0
@@ -54,12 +44,14 @@ module MongoidExt
         page = opts.delete(:page) || 1
         select = opts.delete(:select) || self.fields.keys
 
+        @parser = MongoidExt::Filter::Parser.new(stemmer)
+        parsed_query = @parser.parse(query)
+
+        conds = _build_filter_query(parsed_query)
         query = Mongoid::Criteria.new(self)
-        query.where(opts.merge(:_keywords.in => regex)).all
+        conds = query.where(opts).where(conds).selector
 
-        conds = query.selector
-
-        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, conds, {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
+        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.selector, {:words => parsed_query[:words].to_a, :stemmed => parsed_query[:stemmed].to_a, :limit => limit, :min_score => min_score, :select => select })
 
         pagination = Paginator.new(results["total_entries"], page, limit)
 
@@ -71,6 +63,42 @@ module MongoidExt
         end
 
         pagination
+      end
+
+      def _build_filter_query(parsed_query)
+        mongoquery = {}
+
+        if !parsed_query[:tokens].empty?
+          keywords = []
+
+          parsed_query[:tokens].each do |t|
+            keywords << /^#{Regexp.escape(t)}/i if t.size > 2
+          end
+
+          mongoquery[:_keywords] = { :$in => keywords }
+        end
+
+        mongoquery.merge!(map_filter_operators(parsed_query[:quotes], parsed_query[:operators]))
+
+        mongoquery
+      end
+
+      def map_filter_operators(quotes, ops)
+        mongoquery = {}
+
+        if ops["is"]
+          ops["is"].each do |d|
+            mongoquery[d] = true
+          end
+        end
+
+        if ops["not"]
+          ops["not"].each do |d|
+            mongoquery[d] = false
+          end
+        end
+
+        mongoquery
       end
     end
 

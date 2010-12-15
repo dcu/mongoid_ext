@@ -34,6 +34,7 @@ require 'mongoid_ext/update'
 
 # filter
 require 'mongoid_ext/filter'
+require 'mongoid_ext/filter/parser'
 
 # slug
 require 'mongoid_ext/slugizer'
