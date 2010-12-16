@@ -14,8 +14,6 @@ rescue LoadError
   $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
 end
 
-require 'mongoid_ext/paginator'
-
 # types
 require 'mongoid_ext/types/open_struct'
 require 'mongoid_ext/types/timestamp'
@@ -35,6 +33,7 @@ require 'mongoid_ext/update'
 # filter
 require 'mongoid_ext/filter'
 require 'mongoid_ext/filter/parser'
+require 'mongoid_ext/filter/result_set'
 
 # slug
 require 'mongoid_ext/slugizer'

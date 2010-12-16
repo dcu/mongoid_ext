@@ -53,7 +53,7 @@ module MongoidExt
 
         results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.selector, {:words => parsed_query[:words].to_a, :stemmed => parsed_query[:stemmed].to_a, :limit => limit, :min_score => min_score, :select => select })
 
-        pagination = Paginator.new(results["total_entries"], page, limit)
+        pagination = MongoidExt::Filter::ResultSet.new(results["total_entries"], parsed_query, conds, page, limit)
 
         pagination.subject = results['results'].map do |result|
           item = self.new(result['doc'])
