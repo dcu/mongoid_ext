@@ -66,7 +66,7 @@ module MongoidExt
     end
 
     def destroy_files
-      self.delete_if do |id, file|
+      each_file do |id, file|
         get(id).delete
       end
     end
