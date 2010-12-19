@@ -31,7 +31,7 @@ module MongoidExt
         @language ||= lang
       end
 
-      def filter(query, opts = {})
+      def filter_conditions(query, opts = {})
         stemmer = nil
         language = opts.delete(:language) || 'en'
 
@@ -39,15 +39,19 @@ module MongoidExt
           stemmer = MongoidExt::Filter.build_stemmer(language)
         end
 
+        @parser = MongoidExt::Filter::Parser.new(stemmer)
+        parsed_query = @parser.parse(query)
+
+        [parsed_query, _build_filter_query(parsed_query)]
+      end
+
+      def filter(query, opts = {})
         min_score = opts.delete(:min_score) || 0.0
         limit = opts.delete(:per_page) || 25
         page = opts.delete(:page) || 1
         select = opts.delete(:select) || self.fields.keys
 
-        @parser = MongoidExt::Filter::Parser.new(stemmer)
-        parsed_query = @parser.parse(query)
-
-        conds = _build_filter_query(parsed_query)
+        parsed_query, conds = self.filter_conditions(query, opts)
         query = Mongoid::Criteria.new(self)
         conds = query.where(opts).where(conds).selector
 
