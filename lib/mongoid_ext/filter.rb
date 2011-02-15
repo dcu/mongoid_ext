@@ -148,8 +148,9 @@ module MongoidExt
             if stemmer
               stem = stemmer.stem(word)
             end
+            normalize_string = lambda {|str| ActiveSupport::Multibyte::Chars.new(str).normalize(:kd).gsub(/[^\x00-\x7F]/n, '').to_s }
 
-            normalized=word.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n, '').to_s
+            normalized = normalize_string.call(word)
 
             if word != normalized
               words << normalized
@@ -157,7 +158,7 @@ module MongoidExt
 
             words << word
             if stem
-              normalized=stem.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n, '').to_s
+              normalized=normalize_string.call(stem)
 
               words << normalized if stem != normalized
               words << stem if stem != word
