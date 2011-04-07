@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-12-19}
+  s.date = %q{2011-04-06}
   s.default_executable = %q{mongoid_console}
   s.description = %q{mongoid plugins}
   s.email = %q{krawek@gmail.com}
@@ -47,7 +47,6 @@ Gem::Specification.new do |s|
     "lib/mongoid_ext/tags.rb",
     "lib/mongoid_ext/types/embedded_hash.rb",
     "lib/mongoid_ext/types/open_struct.rb",
-    "lib/mongoid_ext/types/set.rb",
     "lib/mongoid_ext/types/timestamp.rb",
     "lib/mongoid_ext/types/translation.rb",
     "lib/mongoid_ext/update.rb",
@@ -68,12 +67,13 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/dcu/mongoid_ext}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{mongoid plugins}
   s.test_files = [
     "test/helper.rb",
     "test/models.rb",
     "test/support/custom_matchers.rb",
+    "test/test_document_set.rb",
     "test/test_filter.rb",
     "test/test_modifiers.rb",
     "test/test_random.rb",
@@ -87,70 +87,48 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mongoid_ext>, [">= 0"])
-      s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
+      s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0"])
       s.add_runtime_dependency(%q<uuidtools>, [">= 2.1.1"])
-      s.add_runtime_dependency(%q<i18n>, ["~> 0.4.1"])
-      s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3"])
+      s.add_runtime_dependency(%q<i18n>, [">= 0"])
+      s.add_runtime_dependency(%q<tzinfo>, [">= 0"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
+      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<shoulda>, ["~> 2.11.3"])
       s.add_development_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
       s.add_development_dependency(%q<shoulda>, ["~> 2.11.3"])
       s.add_development_dependency(%q<mocha>, ["~> 0.9.4"])
       s.add_development_dependency(%q<timecop>, [">= 0"])
-      s.add_development_dependency(%q<shoulda>, ["~> 2.11.3"])
-      s.add_development_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
-      s.add_development_dependency(%q<shoulda>, ["~> 2.11.3"])
-      s.add_development_dependency(%q<mocha>, ["~> 0.9.4"])
-      s.add_development_dependency(%q<timecop>, [">= 0"])
-      s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-      s.add_runtime_dependency(%q<uuidtools>, [">= 2.1.1"])
-      s.add_runtime_dependency(%q<i18n>, ["~> 0.4.1"])
-      s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3"])
     else
-      s.add_dependency(%q<mongoid_ext>, [">= 0"])
-      s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
+      s.add_dependency(%q<mongoid>, ["~> 2.0.0"])
       s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
-      s.add_dependency(%q<i18n>, ["~> 0.4.1"])
-      s.add_dependency(%q<tzinfo>, ["~> 0.3"])
+      s.add_dependency(%q<i18n>, [">= 0"])
+      s.add_dependency(%q<tzinfo>, [">= 0"])
+      s.add_dependency(%q<yard>, ["~> 0.6.0"])
+      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
       s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
       s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
       s.add_dependency(%q<mocha>, ["~> 0.9.4"])
       s.add_dependency(%q<timecop>, [">= 0"])
-      s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
-      s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
-      s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
-      s.add_dependency(%q<mocha>, ["~> 0.9.4"])
-      s.add_dependency(%q<timecop>, [">= 0"])
-      s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-      s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
-      s.add_dependency(%q<i18n>, ["~> 0.4.1"])
-      s.add_dependency(%q<tzinfo>, ["~> 0.3"])
     end
   else
-    s.add_dependency(%q<mongoid_ext>, [">= 0"])
-    s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
+    s.add_dependency(%q<mongoid>, ["~> 2.0.0"])
     s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
-    s.add_dependency(%q<i18n>, ["~> 0.4.1"])
-    s.add_dependency(%q<tzinfo>, ["~> 0.3"])
+    s.add_dependency(%q<i18n>, [">= 0"])
+    s.add_dependency(%q<tzinfo>, [">= 0"])
+    s.add_dependency(%q<yard>, ["~> 0.6.0"])
+    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
     s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
     s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
     s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
     s.add_dependency(%q<mocha>, ["~> 0.9.4"])
     s.add_dependency(%q<timecop>, [">= 0"])
-    s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
-    s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
-    s.add_dependency(%q<shoulda>, ["~> 2.11.3"])
-    s.add_dependency(%q<mocha>, ["~> 0.9.4"])
-    s.add_dependency(%q<timecop>, [">= 0"])
-    s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
-    s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
-    s.add_dependency(%q<i18n>, ["~> 0.4.1"])
-    s.add_dependency(%q<tzinfo>, ["~> 0.3"])
   end
 end
 

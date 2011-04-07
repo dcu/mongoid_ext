@@ -10,7 +10,7 @@ module MongoidExt
       klass.class_eval do
         extend ClassMethods
 
-        field :_keywords, :type => Set
+        field :_keywords, :type => Set, :default => Set.new
         index :_keywords
 
         before_save :_update_keywords
@@ -125,7 +125,7 @@ module MongoidExt
         stop_words = Set.new(self.send("#{lang}_stop_words"))
       end
 
-      self._keywords = []
+      self._keywords = Set.new
       self.class.filterable_keys.each do |key|
         self._keywords += keywords_for_value(read_attribute(key), stemmer, stop_words)
       end

@@ -1,4 +1,14 @@
+# @author David Cuadrado
 module MongoidExt
+  # Slugizes a given key
+  # Usage:
+  #   class MyModel
+  #     include Mongoid::Document
+  #     include MongoidExt::Slugizer
+  #     field :name
+  #     slug_key :name, :callback_type => :before_save
+  #   end
+  #
   module Slugizer
     def self.included(klass)
       klass.class_eval do
@@ -36,6 +46,12 @@ module MongoidExt
     end
 
     module ClassMethods
+      # marks a field as sluggable (default key is :name)
+      # == Parameters
+      # @param [Symbol] key the field to be slugized
+      # @param [Hash] options options to configure the process
+      # @return 
+      #   
       def slug_key(key = :name, options = {})
         @slug_options ||= options
         @callback_type ||= begin
@@ -54,6 +70,9 @@ module MongoidExt
     end
 
     module Finder
+      # finds a document by slug or id
+      # @param [Strig] id slug or id
+      # @param [Hash] options additional conditions
       def by_slug(id, options = {})
         self.where(options.merge({:slug => id})).first || self.where(options.merge({:_id => id})).first
       end
