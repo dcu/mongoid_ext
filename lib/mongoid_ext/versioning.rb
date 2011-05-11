@@ -134,8 +134,9 @@ module Versioning
     def versionable_keys(*keys)
       self.versionable_options = keys.extract_options!
       self.versionable_options[:owner_field] ||= "user_id"
+      self.versionable_options[:owner_field] = self.versionable_options[:owner_field].to_s
 
-      relationship = self.relations[self.versionable_options[:owner_field].to_s.sub(/_id$/, "")]
+      relationship = self.relations[self.versionable_options[:owner_field].sub(/_id$/, "")]
       if !relationship
         raise ArgumentError, "the supplied :owner_field => #{self.versionable_options[:owner_field].inspect} option is invalid"
       end
