@@ -2,18 +2,14 @@ require 'ostruct'
 
 class OpenStruct
   def self.set(value)
-    if value.kind_of?(self)
-      value.send(:table)
-    else
-      value
-    end
+    value.nil? ? nil : value.to_hash
   end
 
   def self.get(value)
-    if value.kind_of?(self)
-      value
-    else
-      OpenStruct.new(value || {})
-    end
+    value.nil? ? nil : OpenStruct.new(value || {})
+  end
+
+  def to_hash
+    send(:table)
   end
 end

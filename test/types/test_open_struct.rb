@@ -7,16 +7,16 @@ class OpenStructTest < Test::Unit::TestCase
 
   context "working with sets" do
     setup do
-      @config = UserConfig.create!(:entries => OpenStruct.new({}))
+      @config = UserConfig.create!()
     end
 
     should "allow to add new keys" do
-      entries = @config.entries
+      entries = OpenStruct.new()
       entries.new_key = "my new key"
       @config.entries = entries
       @config.save
 
-      from_db.entries.new_key.should == "my new key"
+      from_db.entries["new_key"].should == "my new key"
     end
   end
 end
