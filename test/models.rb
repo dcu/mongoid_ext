@@ -61,7 +61,7 @@ class BlogPost # for Slug and Filter
 
   referenced_in :updated_by, :class_name => "User"
 
-  versionable_keys :title, :body, :tags, :user_field => "updated_by_id"
+  versionable_keys :title, :body, :tags, :user_field => "updated_by_id", :max_versions => 2
 
   def find_language
     'en'

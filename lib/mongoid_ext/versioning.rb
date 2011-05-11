@@ -135,7 +135,7 @@ module Versioning
       self.versionable_options = keys.extract_options!
       self.versionable_options[:user_field] ||= "user_id"
 
-      relationship = self.relations[self.versionable_options[:user_field].sub(/_id$/, "")]
+      relationship = self.relations[self.versionable_options[:user_field].to_s.sub(/_id$/, "")]
       if !relationship
         raise ArgumentError, "the supplied :user_field => #{self.versionable_options[:user_field].inspect} option is invalid"
       end
@@ -160,6 +160,13 @@ module Versioning
 
         uuser_id = send(self.versionable_options[:user_field]+"_was")||send(self.versionable_options[:user_field])
         if !self.new? && !data.empty? && uuser_id
+          max_versions = self.versionable_options[:max_versions].to_i
+          if self.version_ids.size >= max_versions
+            old = self.version_ids.slice!(0, max_versions)
+            self.version_klass.delete_all(:_ids => old)
+            self.save
+          end
+
           self.version_klass.create({
             'data' => data,
             'owner_id' => uuser_id,

@@ -38,5 +38,18 @@ class TestVersioning < Test::Unit::TestCase
       @blogpost.rollback!(0)
       @blogpost.title.should == "operating systems"
     end
+
+    should "respect the max versions limit" do
+      @blogpost.title = "sistemas operativos"
+      @blogpost.save!
+      @blogpost.reload
+      @blogpost.title = "sistemas operativos 2"
+      @blogpost.save!
+      @blogpost.reload
+      @blogpost.title = "sistemas operativos 3"
+      @blogpost.save!
+      @blogpost.reload
+      @blogpost.versions.count.should == 2
+    end
   end
 end
