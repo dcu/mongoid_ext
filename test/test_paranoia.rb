@@ -30,5 +30,11 @@ class TestParanoia < Test::Unit::TestCase
       User.deleted.compact!
       User.deleted.count.should == 0
     end
+
+    should "find the record using the original id" do
+      id = @user.id
+      @user.destroy
+      User.deleted.find(id).should_not be_nil
+    end
   end
 end

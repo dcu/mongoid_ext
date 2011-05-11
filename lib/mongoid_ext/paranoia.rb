@@ -77,7 +77,6 @@ module MongoidExt #:nodoc:
 
           self.collection_name = "#{self.parent_class.collection_name}.trash"
 
-          identity :type => String
           field :document, :type => Hash
 
           before_validation :set_id, :on => :create
