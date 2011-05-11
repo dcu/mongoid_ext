@@ -27,8 +27,8 @@ module Versioning
           self.send("#{key}=", value)
         end
 
-        user_field = self.class.versionable_options[:user_field]
-        self[user_field] = version[user_field] if !self.changes.include?(user_field)
+        owner_field = self.class.versionable_options[:owner_field]
+        self[owner_field] = version[owner_field] if !self.changes.include?(owner_field)
         self.updated_at = version.date if self.respond_to?(:updated_at) && !self.updated_at_changed?
       end
 
@@ -55,7 +55,7 @@ module Versioning
     end
 
     def current_version
-      version_klass.new(:data => self.attributes, self.class.versionable_options[:user_field] => (self.updated_by_id_was || self.updated_by_id), :created_at => Time.now)
+      version_klass.new(:data => self.attributes, self.class.versionable_options[:owner_field] => (self.updated_by_id_was || self.updated_by_id), :created_at => Time.now)
     end
 
     def version_at(pos)
@@ -127,17 +127,17 @@ module Versioning
     #     class Foo
     #       include Mongoid::Document
     #       include MongoidExt::Versioning
-    #       versionable_keys :field1, :field2, :field3, :user_class => "Customer", :user_field => "updated_by_id"
+    #       versionable_keys :field1, :field2, :field3, :user_class => "Customer", :owner_field => "updated_by_id"
     #       ...
     #     end
     #
     def versionable_keys(*keys)
       self.versionable_options = keys.extract_options!
-      self.versionable_options[:user_field] ||= "user_id"
+      self.versionable_options[:owner_field] ||= "user_id"
 
-      relationship = self.relations[self.versionable_options[:user_field].to_s.sub(/_id$/, "")]
+      relationship = self.relations[self.versionable_options[:owner_field].to_s.sub(/_id$/, "")]
       if !relationship
-        raise ArgumentError, "the supplied :user_field => #{self.versionable_options[:user_field].inspect} option is invalid"
+        raise ArgumentError, "the supplied :owner_field => #{self.versionable_options[:owner_field].inspect} option is invalid"
       end
       self.versionable_options[:user_class] = relationship.class_name
 
@@ -158,7 +158,7 @@ module Versioning
           version_message = ""
         end
 
-        uuser_id = send(self.versionable_options[:user_field]+"_was")||send(self.versionable_options[:user_field])
+        uuser_id = send(self.versionable_options[:owner_field]+"_was")||send(self.versionable_options[:owner_field])
         if !self.new? && !data.empty? && uuser_id
           max_versions = self.versionable_options[:max_versions].to_i
           if self.version_ids.size >= max_versions
