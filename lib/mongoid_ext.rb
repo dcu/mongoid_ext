@@ -42,6 +42,7 @@ require 'mongoid_ext/slugizer'
 require 'mongoid_ext/tags'
 
 require 'mongoid_ext/versioning'
+require 'mongoid_ext/paranoia'
 
 require 'mongoid_ext/random'
 require 'mongoid_ext/mongo_mapper'

@@ -37,6 +37,7 @@ end
 
 class User
   include Mongoid::Document
+  include MongoidExt::Paranoia
 
   field :login
   field :email
