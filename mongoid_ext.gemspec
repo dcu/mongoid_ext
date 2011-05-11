@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongoid_ext}
-  s.version = "0.6.0"
+  s.version = "0.6.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2011-04-12}
+  s.date = %q{2011-05-11}
   s.default_executable = %q{mongoid_console}
   s.description = %q{mongoid plugins}
   s.email = %q{krawek@gmail.com}
@@ -41,6 +41,7 @@ Gem::Specification.new do |s|
     "lib/mongoid_ext/js/tag_cloud.js",
     "lib/mongoid_ext/modifiers.rb",
     "lib/mongoid_ext/mongo_mapper.rb",
+    "lib/mongoid_ext/paranoia.rb",
     "lib/mongoid_ext/random.rb",
     "lib/mongoid_ext/slugizer.rb",
     "lib/mongoid_ext/storage.rb",
@@ -50,17 +51,20 @@ Gem::Specification.new do |s|
     "lib/mongoid_ext/types/timestamp.rb",
     "lib/mongoid_ext/types/translation.rb",
     "lib/mongoid_ext/update.rb",
+    "lib/mongoid_ext/versioning.rb",
     "mongoid_ext.gemspec",
     "test/helper.rb",
     "test/models.rb",
     "test/support/custom_matchers.rb",
     "test/test_filter.rb",
     "test/test_modifiers.rb",
+    "test/test_paranoia.rb",
     "test/test_random.rb",
     "test/test_slugizer.rb",
     "test/test_storage.rb",
     "test/test_tags.rb",
     "test/test_update.rb",
+    "test/test_versioning.rb",
     "test/types/test_open_struct.rb",
     "test/types/test_set.rb",
     "test/types/test_timestamp.rb"
@@ -75,11 +79,13 @@ Gem::Specification.new do |s|
     "test/support/custom_matchers.rb",
     "test/test_filter.rb",
     "test/test_modifiers.rb",
+    "test/test_paranoia.rb",
     "test/test_random.rb",
     "test/test_slugizer.rb",
     "test/test_storage.rb",
     "test/test_tags.rb",
     "test/test_update.rb",
+    "test/test_versioning.rb",
     "test/types/test_open_struct.rb",
     "test/types/test_set.rb",
     "test/types/test_timestamp.rb"
@@ -94,6 +100,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_runtime_dependency(%q<i18n>, [">= 0"])
       s.add_runtime_dependency(%q<tzinfo>, [">= 0"])
+      s.add_runtime_dependency(%q<differ>, [">= 0.1.2"])
       s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -107,6 +114,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<tzinfo>, [">= 0"])
+      s.add_dependency(%q<differ>, [">= 0.1.2"])
       s.add_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -121,6 +129,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
     s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<tzinfo>, [">= 0"])
+    s.add_dependency(%q<differ>, [">= 0.1.2"])
     s.add_dependency(%q<yard>, ["~> 0.6.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
