@@ -35,11 +35,19 @@ class UserConfig #for OpenStruct
   field :entries, :type => OpenStruct
 end
 
+class User
+  include Mongoid::Document
+
+  field :login
+  field :email
+end
+
 class BlogPost # for Slug and Filter
   include Mongoid::Document
   include MongoidExt::Filter
   include MongoidExt::Slugizer
   include MongoidExt::Tags
+  include MongoidExt::Versioning
 
   filterable_keys :title, :body, :tags, :date
   slug_key :title, :max_length => 18, :min_length => 3, :callback_type => :before_validation, :add_prefix => true
@@ -49,6 +57,10 @@ class BlogPost # for Slug and Filter
   field :body, :type => String
   field :tags, :type => Array
   field :date, :type => Time
+
+  referenced_in :updated_by, :class_name => "User"
+
+  versionable_keys :title, :body, :tags, :user_field => "updated_by_id"
 
   def find_language
     'en'

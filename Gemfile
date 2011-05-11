@@ -4,6 +4,7 @@ gem 'mongoid', '~> 2.0.0'
 gem 'uuidtools', '>= 2.1.1'
 gem 'i18n'
 gem 'tzinfo'
+gem 'differ', '>= 0.1.2'
 
 group :development do
   gem "yard", "~> 0.6.0"

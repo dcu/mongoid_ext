@@ -6,6 +6,7 @@ end
 
 require 'mongoid'
 require 'uuidtools'
+require 'differ'
 require 'active_support/inflector'
 
 begin
@@ -39,6 +40,8 @@ require 'mongoid_ext/slugizer'
 
 # tags
 require 'mongoid_ext/tags'
+
+require 'mongoid_ext/versioning'
 
 require 'mongoid_ext/random'
 require 'mongoid_ext/mongo_mapper'

@@ -1,0 +1,42 @@
+require 'helper'
+
+class TestVersioning < Test::Unit::TestCase
+  context "working with versions" do
+    setup do
+      BlogPost.delete_all
+      User.delete_all
+
+      @blogpost = BlogPost.create(:title => "operating systems",
+                                  :body => "list of some operating systems",
+                                  :tags => %w[list windows freebsd osx linux],
+                                  :updated_by => User.create(:login => "foo"))
+    end
+
+    should "generate a new version" do
+      @blogpost.versions_count.should == 0
+      @blogpost.title = "sistemas operativos"
+      @blogpost.save!
+      @blogpost.reload
+      @blogpost.versions_count.should == 1
+    end
+
+    should "be able to generate a diff between versions" do
+      @blogpost.title = "sistemas operativos"
+      @blogpost.save!
+      @blogpost.reload
+
+      @blogpost.diff(:title, "current", 0, :ascii).should == '{+"sistemas operativos"}'
+      @blogpost.diff(:title, 0, "current", :ascii).should == '{-"sistemas operativos"}'
+    end
+
+    should "be able to restore a previous version" do
+      @blogpost.title = "sistemas operativos"
+      @blogpost.save!
+      @blogpost.reload
+
+      @blogpost.title.should == "sistemas operativos"
+      @blogpost.rollback!(0)
+      @blogpost.title.should == "operating systems"
+    end
+  end
+end
