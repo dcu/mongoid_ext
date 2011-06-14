@@ -5,15 +5,18 @@ module MongoidExt
     included do
       field :votes_count, :type => Integer, :default => 0
       field :votes_average, :type => Integer, :default => 0
+      field :votes_up, :type => Integer, :default => 0
+      field :votes_down, :type => Integer, :default => 0
 
       field :votes, :type => Hash, :default => {}
     end
 
     def vote!(value, voter_id, &block)
       old_vote = self.votes[voter_id]
-      if old_vote.nil?
+      if !old_vote
         self.votes[voter_id] = value
-        self.save
+        self.save(:validate => false)
+
         add_vote!(value, voter_id, &block)
         return :created
       else
@@ -26,7 +29,7 @@ module MongoidExt
           return :updated
         else
           self.votes.delete(voter_id)
-          self.save
+          self.save(:validate => false)
           remove_vote!(value, voter_id, &block)
           return :destroyed
         end
@@ -35,10 +38,24 @@ module MongoidExt
 
     def add_vote!(value, voter_id, &block)
       if embedded?
-        self._parent.increment({self._position+".votes_count" => 1,
-                                self._position+".votes_average" => value.to_i})
+        updates = {self._position+".votes_count" => 1,
+                   self._position+".votes_average" => value.to_i}
+        if value == 1
+          updates[self._position+".votes_up"] = 1
+        elsif value == -1
+          updates[self._position+".votes_down"] = 1
+        end
+
+        self._parent.increment(updates)
       else
-        self.increment({:votes_count => 1, :votes_average => value.to_i})
+        updates = {:votes_count => 1, :votes_average => value.to_i}
+        if value == 1
+          updates[:votes_up] = 1
+        elsif value == -1
+          updates[:votes_down] = 1
+        end
+
+        self.increment(updates)
       end
 
       block.call(value, :add) if block
@@ -48,10 +65,24 @@ module MongoidExt
 
     def remove_vote!(value, voter_id, &block)
       if embedded?
-        self._parent.increment({self._position+".votes_count" => -1,
-                                self._position+".votes_average" => -value.to_i})
+        updates = {self._position+".votes_count" => -1,
+                   self._position+".votes_average" => -value.to_i}
+        if value == 1
+          updates[self._position+".votes_up"] = -1
+        elsif value == -1
+          updates[self._position+".votes_down"] = -1
+        end
+
+        self._parent.increment(updates)
       else
-        self.increment({:votes_count => -1, :votes_average => -value})
+        updates = {:votes_count => -1, :votes_average => -value}
+        if value == 1
+          updates[:votes_up] = -1
+        elsif value == -1
+          updates[:votes_down] = -1
+        end
+
+        self.increment(updates)
       end
 
       block.call(value, :remove) if block

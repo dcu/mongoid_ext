@@ -38,6 +38,7 @@ end
 class User
   include Mongoid::Document
   include MongoidExt::Paranoia
+  include MongoidExt::Voteable
 
   field :login
   field :email
