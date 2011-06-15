@@ -1,6 +1,6 @@
 source :gemcutter
 
-gem 'mongoid', '~> 2.0.0'
+gem 'mongoid', '~> 2'
 gem 'uuidtools', '>= 2.1.1'
 gem 'i18n'
 gem 'tzinfo'
