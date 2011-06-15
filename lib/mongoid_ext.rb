@@ -15,6 +15,8 @@ rescue LoadError
   $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
 end
 
+require 'mongoid_ext/patches'
+
 # types
 require 'mongoid_ext/types/open_struct'
 require 'mongoid_ext/types/timestamp'

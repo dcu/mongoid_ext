@@ -55,7 +55,7 @@ module MongoidExt
         query = Mongoid::Criteria.new(self)
         conds = query.where(opts).where(conds).selector
 
-        results = self.db.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, conds, {:words => parsed_query[:words].to_a, :stemmed => parsed_query[:stemmed].to_a, :limit => limit, :min_score => min_score, :select => select })
+        results = self.db.nolock_eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, conds, {:words => parsed_query[:words].to_a, :stemmed => parsed_query[:stemmed].to_a, :limit => limit, :min_score => min_score, :select => select })
 
         pagination = MongoidExt::Filter::ResultSet.new(results["total_entries"], parsed_query, conds, page, limit)
 
