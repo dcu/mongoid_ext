@@ -63,6 +63,14 @@ class TestVoteable < Test::Unit::TestCase
       @user.voted?("voter_id1").should be_true
       @user.reload
       @user.voted?("voter_id1").should be_true
+      @user.voted?("voter_id3").should be_false
+    end
+
+    should "check the voter id even if votes was not loaded" do
+      @user.vote!("1", "voter_id1")
+      @user = User.without(:votes).find(@user.id)
+      @user.voted?("voter_id1").should be_true
+      @user.voted?("voter_id2").should be_false
     end
   end
 end
