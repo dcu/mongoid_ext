@@ -55,5 +55,15 @@ class TestVoteable < Test::Unit::TestCase
       @user.votes_up.should == 2
       @user.votes_down.should == 3
     end
+
+    should "check if a voter_id already voted" do
+      @user.vote!("1", "voter_id1")
+      @user.vote!("1", "voter_id2")
+
+      @user.voted?("voter_id1").should be_true
+      @user.reload
+      @user.voted?("voter_id1").should be_true
+    end
   end
 end
+

@@ -11,6 +11,14 @@ module MongoidExt
       field :votes, :type => Hash, :default => {}
     end
 
+    def voted?(voter_id)
+      if self[:votes] && !self[:votes].empty?
+        self[:votes].include?(voter_id)
+      elsif doc = self.collection.find({:_id => self.id}, {:"votes.#{voter_id}" => 1}).next_document
+        doc[:votes].include?(voter_id)
+      end
+    end
+
     def vote!(value, voter_id, &block)
       old_vote = self.votes[voter_id]
       if !old_vote
