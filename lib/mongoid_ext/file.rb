@@ -41,7 +41,11 @@ module MongoidExt
     end
 
     def get
-      @io ||= gridfs.get(grid_filename)
+      @io ||= begin
+        gridfs.get(grid_filename)
+      rescue Mongo::GridFileNotFound
+        return nil
+      end
     end
 
     def reset
