@@ -1,3 +1,12 @@
+class CreditCard # for encryptor
+  include Mongoid::Document
+  include MongoidExt::Encryptor
+
+  encrypted_field :number, :type => Integer, :key => "my password"
+  encrypted_field :data, :type => Hash, :key => "my password"
+  encrypted_field :extra, :key => "my password"
+end
+
 
 class Event # for safe_update, and Timestamp
   include Mongoid::Document

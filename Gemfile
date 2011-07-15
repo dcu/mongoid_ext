@@ -5,6 +5,7 @@ gem 'uuidtools', '>= 2.1.1'
 gem 'i18n'
 gem 'tzinfo'
 gem 'differ', '>= 0.1.2'
+gem 'encryptor', '~> 1.1.3'
 
 group :development do
   gem "yard", "~> 0.6.0"

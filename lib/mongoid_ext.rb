@@ -16,6 +16,7 @@ rescue LoadError
 end
 
 require 'mongoid_ext/patches'
+require 'mongoid_ext/encryptor'
 
 # types
 require 'mongoid_ext/types/open_struct'
