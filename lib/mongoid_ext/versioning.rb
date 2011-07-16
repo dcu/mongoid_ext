@@ -33,7 +33,9 @@ module Versioning
       end
 
       @rolling_back = true
-      save!
+      r = save!
+      @rolling_back = false
+      r
     end
 
     def load_version(pos = nil)
@@ -51,7 +53,28 @@ module Versioning
       version1 = self.version_at(pos1)
       version2 = self.version_at(pos2)
 
+      Differ.diff(version1.content(key), version2.content(key)).format_as(format).html_safe
+    end
+
+    def diff_by_word(key, pos1, pos2, format = :html)
+      version1 = self.version_at(pos1)
+      version2 = self.version_at(pos2)
+
       Differ.diff_by_word(version1.content(key), version2.content(key)).format_as(format).html_safe
+    end
+
+    def diff_by_line(key, pos1, pos2, format = :html)
+      version1 = self.version_at(pos1)
+      version2 = self.version_at(pos2)
+
+      Differ.diff_by_line(version1.content(key), version2.content(key)).format_as(format).html_safe
+    end
+
+    def diff_by_char(key, pos1, pos2, format = :html)
+      version1 = self.version_at(pos1)
+      version2 = self.version_at(pos2)
+
+      Differ.diff_by_char(version1.content(key), version2.content(key)).format_as(format).html_safe
     end
 
     def current_version
@@ -107,7 +130,7 @@ module Versioning
         validates_presence_of :target_id
 
         def content(key)
-          cdata = self.data[key]
+          cdata = self.data[key.to_s]
           if cdata.respond_to?(:join)
             cdata.join(" ")
           else
@@ -162,10 +185,10 @@ module Versioning
         uuser_id = send(self.versionable_options[:owner_field]+"_was")||send(self.versionable_options[:owner_field])
         if !self.new? && !data.empty? && uuser_id
           max_versions = self.versionable_options[:max_versions].to_i
-          if max_versions > 0 && self.version_ids.size >= max_versions
+          if max_versions > 0 && self.version_ids.size > max_versions
             old = self.version_ids.slice!(0, max_versions)
             self.class.skip_callback(:save, :before, :save_version)
-            self.version_klass.where(:_ids => old).delete_all
+            self.version_klass.where(:_id.in => old).delete_all
             self.save
             self.class.set_callback(:save, :before, :save_version)
           end

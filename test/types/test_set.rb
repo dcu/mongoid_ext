@@ -7,7 +7,9 @@ class SetTest < Test::Unit::TestCase
 
   context "working with sets" do
     setup do
-      @recipe = Recipe.create!(:ingredients => %w[salt sugar water salt sugar water])
+      @recipe = Recipe.new
+      @recipe.ingredients = Set.new(%w[salt sugar water salt sugar water])
+      @recipe.save
     end
 
     should "not have duplicates" do
@@ -20,6 +22,9 @@ class SetTest < Test::Unit::TestCase
     should "not add duplicates" do
       original_size = @recipe.ingredients.size
       @recipe.ingredients << "salt"
+      @recipe.save
+      @recipe.reload
+
       @recipe.ingredients.size.should == original_size
     end
   end

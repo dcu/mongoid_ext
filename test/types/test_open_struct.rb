@@ -16,7 +16,7 @@ class OpenStructTest < Test::Unit::TestCase
       @config.entries = entries
       @config.save
 
-      from_db.entries["new_key"].should == "my new key"
+      from_db.entries.new_key.should == "my new key"
     end
   end
 end
