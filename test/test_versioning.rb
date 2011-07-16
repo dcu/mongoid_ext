@@ -24,9 +24,8 @@ class TestVersioning < Test::Unit::TestCase
       @blogpost.title = "sistemas operativos"
       @blogpost.save!
       @blogpost.reload
-
-      @blogpost.diff(:title, "current", 0, :ascii).should == '{+"sistemas operativos"}'
-      @blogpost.diff(:title, 0, "current", :ascii).should == '{-"sistemas operativos"}'
+      @blogpost.diff_by_word(:title, "current", 0, :ascii).should == "{\"operating\" >> \"sistemas\"} {\"systems\" >> \"operativos\"}"
+      @blogpost.diff_by_line(:title, 0, "current", :ascii).should == "{\"sistemas operativos\" >> \"operating systems\"}"
     end
 
     should "be able to restore a previous version" do
@@ -49,6 +48,7 @@ class TestVersioning < Test::Unit::TestCase
       @blogpost.title = "sistemas operativos 3"
       @blogpost.save!
       @blogpost.reload
+
       @blogpost.versions.count.should == 2
     end
   end
