@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongoid_ext}
-  s.version = "0.6.1"
+  s.version = "0.6.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2011-06-14}
+  s.date = %q{2011-07-15}
   s.default_executable = %q{mongoid_console}
   s.description = %q{mongoid plugins}
   s.email = %q{krawek@gmail.com}
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/mongoid_ext.rb",
     "lib/mongoid_ext/criteria_ext.rb",
     "lib/mongoid_ext/document_ext.rb",
+    "lib/mongoid_ext/encryptor.rb",
     "lib/mongoid_ext/file.rb",
     "lib/mongoid_ext/file_list.rb",
     "lib/mongoid_ext/file_server.rb",
@@ -58,6 +59,7 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/models.rb",
     "test/support/custom_matchers.rb",
+    "test/test_encryptor.rb",
     "test/test_filter.rb",
     "test/test_modifiers.rb",
     "test/test_paranoia.rb",
@@ -87,6 +89,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<i18n>, [">= 0"])
       s.add_runtime_dependency(%q<tzinfo>, [">= 0"])
       s.add_runtime_dependency(%q<differ>, [">= 0.1.2"])
+      s.add_runtime_dependency(%q<encryptor>, ["~> 1.1.3"])
       s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -101,6 +104,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<tzinfo>, [">= 0"])
       s.add_dependency(%q<differ>, [">= 0.1.2"])
+      s.add_dependency(%q<encryptor>, ["~> 1.1.3"])
       s.add_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -116,6 +120,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<tzinfo>, [">= 0"])
     s.add_dependency(%q<differ>, [">= 0.1.2"])
+    s.add_dependency(%q<encryptor>, ["~> 1.1.3"])
     s.add_dependency(%q<yard>, ["~> 0.6.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
