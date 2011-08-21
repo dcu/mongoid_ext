@@ -9,6 +9,7 @@ module MongoidExt
       attr_reader :parsed_query
       attr_reader :mongo_query
       alias limit per_page
+      alias :total_count :total_entries
 
       def initialize(total_entries, parsed_query, mongo_query, current_page, per_page=nil)
         @total_entries    = total_entries.to_i
