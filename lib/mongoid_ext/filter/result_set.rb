@@ -22,6 +22,7 @@ module MongoidExt
       def total_pages
         (total_entries / per_page.to_f).ceil
       end
+      alias :num_pages :total_pages
 
       def out_of_bounds?
         current_page > total_pages
