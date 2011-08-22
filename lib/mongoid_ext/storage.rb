@@ -92,7 +92,7 @@ module MongoidExt
             send(opts[:in]).get(name.to_s).put(name.to_s, file)
           else
             # we store the errors here because we want to validate before storing the file
-            mm_storage_errors.merge!(errors.errors)
+            mm_storage_errors.merge!(self.errors)
           end
         end
 
