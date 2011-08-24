@@ -8,12 +8,11 @@ Gem::Specification.new do |s|
   s.version = "0.6.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["David A. Cuadrado"]
-  s.date = %q{2011-07-15}
-  s.default_executable = %q{mongoid_console}
+  s.authors = [%q{David A. Cuadrado}]
+  s.date = %q{2011-08-24}
   s.description = %q{mongoid plugins}
   s.email = %q{krawek@gmail.com}
-  s.executables = ["mongoid_console"]
+  s.executables = [%q{mongoid_console}]
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
@@ -75,12 +74,11 @@ Gem::Specification.new do |s|
     "test/types/test_timestamp.rb"
   ]
   s.homepage = %q{http://github.com/dcu/mongoid_ext}
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.require_paths = [%q{lib}]
+  s.rubygems_version = %q{1.8.8}
   s.summary = %q{mongoid plugins}
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
