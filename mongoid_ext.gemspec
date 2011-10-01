@@ -4,15 +4,15 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{mongoid_ext}
-  s.version = "0.6.2"
+  s.name = "mongoid_ext"
+  s.version = "0.7.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{David A. Cuadrado}]
-  s.date = %q{2011-08-24}
-  s.description = %q{mongoid plugins}
-  s.email = %q{krawek@gmail.com}
-  s.executables = [%q{mongoid_console}]
+  s.authors = ["David A. Cuadrado"]
+  s.date = "2011-10-01"
+  s.description = "mongoid plugins"
+  s.email = "krawek@gmail.com"
+  s.executables = ["mongoid_console"]
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
@@ -73,16 +73,16 @@ Gem::Specification.new do |s|
     "test/types/test_set.rb",
     "test/types/test_timestamp.rb"
   ]
-  s.homepage = %q{http://github.com/dcu/mongoid_ext}
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.8}
-  s.summary = %q{mongoid plugins}
+  s.homepage = "http://github.com/dcu/mongoid_ext"
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.10"
+  s.summary = "mongoid plugins"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mongoid>, ["~> 2"])
+      s.add_runtime_dependency(%q<mongoid>, ["~> 2.2.1"])
       s.add_runtime_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_runtime_dependency(%q<i18n>, [">= 0"])
       s.add_runtime_dependency(%q<tzinfo>, [">= 0"])
@@ -97,7 +97,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<mocha>, ["~> 0.9.4"])
       s.add_development_dependency(%q<timecop>, [">= 0"])
     else
-      s.add_dependency(%q<mongoid>, ["~> 2"])
+      s.add_dependency(%q<mongoid>, ["~> 2.2.1"])
       s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
       s.add_dependency(%q<i18n>, [">= 0"])
       s.add_dependency(%q<tzinfo>, [">= 0"])
@@ -113,7 +113,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<timecop>, [">= 0"])
     end
   else
-    s.add_dependency(%q<mongoid>, ["~> 2"])
+    s.add_dependency(%q<mongoid>, ["~> 2.2.1"])
     s.add_dependency(%q<uuidtools>, [">= 2.1.1"])
     s.add_dependency(%q<i18n>, [">= 0"])
     s.add_dependency(%q<tzinfo>, [">= 0"])
