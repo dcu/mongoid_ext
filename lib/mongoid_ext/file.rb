@@ -6,6 +6,7 @@ module MongoidExt
     field :name, :type => String
     field :extension, :type => String
     field :content_type, :type => String
+    field :md5, :type => String
 
     alias :filename :name
 
@@ -44,6 +45,11 @@ module MongoidExt
       options[:filename] = grid_filename
       gridfs.delete(grid_filename)
       gridfs.put(io, options)
+
+      if file = self.get
+        file.send(:get_md5)
+        self['md5'] = file.server_md5
+      end
     end
 
     def get
