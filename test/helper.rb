@@ -8,11 +8,10 @@ require 'timecop'
 require 'mocha'
 require 'pp'
 
-require 'support/custom_matchers'
-
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
+require 'support/custom_matchers'
 require 'mongoid_ext'
 
 Mongoid.configure do |config|

@@ -1,8 +1,11 @@
 module MongoidExt
   class FileList < EmbeddedHash
     attr_accessor :parent_document
+    attr_accessor :list_name
 
     def put(id, io, metadata = {})
+      mark_parent!
+
       if !parent_document.new_record?
         filename = id
         if io.respond_to?(:original_filename)
@@ -33,20 +36,24 @@ module MongoidExt
     end
 
     def get(id)
+      mark_parent!
+
       if id.kind_of?(MongoidExt::File)
         self[id.id] = id
         return id
       end
 
       id = id.to_s.gsub(".", "_")
-      file = self[id]
+      file = self.fetch(id, nil)
+
       if file.nil?
         file = self[id] = MongoidExt::File.new
-      elsif file.class == BSON::OrderedHash
+      elsif file.class == ::Hash || file.class == BSON::OrderedHash
         file = self[id] = MongoidExt::File.new(file)
       end
 
       file._root_document = parent_document
+      file._list_name = self.list_name
       file
     end
 
@@ -60,6 +67,8 @@ module MongoidExt
     end
 
     def delete(id)
+      mark_parent!
+
       file = self.get(id)
       super(id)
       file.delete
@@ -69,6 +78,23 @@ module MongoidExt
       each_file do |id, file|
         get(id).delete
       end
+    end
+
+    def serialize(v)
+      v
+    end
+
+    def deserialize(v)
+      doc = self.class.new
+      v.each do |k,v|
+        doc[k] = MongoidExt::File.new(v)
+      end
+
+      doc
+    end
+
+    def mark_parent!
+      parent_document.send("#{list_name}_will_change!")
     end
   end
 end

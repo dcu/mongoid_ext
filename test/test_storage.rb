@@ -49,7 +49,7 @@ class StorageTest < Test::Unit::TestCase
 
       should "not store the file if object is new" do
         @avatar.put_file("an_avatar.png", @data)
-        lambda {@avatar.fetch_file("an_avatar.png").read}.should raise_error
+        @avatar.fetch_file("an_avatar.png").read.should be_nil
       end
     end
 

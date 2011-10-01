@@ -1,4 +1,6 @@
 class Translation < String
+  include Mongoid::Fields::Serializable
+
   attr_accessor :keys
 
   def initialize(*args)
@@ -33,13 +35,13 @@ class Translation < String
     tr
   end
 
-  def self.set(value)
+  def serialize(value)
     return value.keys if value.kind_of?(self)
 
     @keys
   end
 
-  def self.get(value)
+  def deserialize(value)
     return value if value.kind_of?(self)
 
     result = self.new

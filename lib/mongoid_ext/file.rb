@@ -1,6 +1,7 @@
 module MongoidExt
   class File < EmbeddedHash
     attr_accessor :_root_document
+    attr_accessor :_list_name
 
     field :name, :type => String
     field :extension, :type => String
@@ -9,6 +10,8 @@ module MongoidExt
     alias :filename :name
 
     def put(filename, io, options = {})
+      mark_parent!
+
       options[:_id] = grid_filename
 
       options[:metadata] ||= {}
@@ -26,7 +29,10 @@ module MongoidExt
       if defined?(Magic) && Magic.respond_to?(:guess_string_mime_type)
         data = io.read(256) # be nice with memory usage
         self["content_type"] = options[:content_type] = Magic.guess_string_mime_type(data.to_s)
-        self["extension"] ||= options[:content_type].to_s.split("/").last.split("-").last
+
+        if self.fetch("extension", nil).nil?
+          self["extension"] = options[:content_type].to_s.split("/").last.split("-").last
+        end
 
         if io.respond_to?(:rewind)
           io.rewind
@@ -61,11 +67,11 @@ module MongoidExt
     end
 
     def size
-      get.file_length
+      get.file_length rescue nil
     end
 
     def read(size = nil)
-      self.get.read(size)
+      self.get.read(size) rescue nil
     end
 
     def delete
@@ -74,7 +80,7 @@ module MongoidExt
     end
 
     def method_missing(name, *args, &block)
-      f = self.get rescue nil
+      f = self.get
       if f && f.respond_to?(name)
         f.send(name, *args, &block)
       else
@@ -85,6 +91,10 @@ module MongoidExt
     protected
     def gridfs
       _root_document.class.gridfs
+    end
+
+    def mark_parent!
+      _root_document.send("#{_list_name}_will_change!")
     end
   end
 end

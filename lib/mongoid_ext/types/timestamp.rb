@@ -1,15 +1,17 @@
 class Timestamp
-  def self.get(value)
+  include Mongoid::Fields::Serializable
+
+  def deserialize(value)
     if value.nil? || value == ''
       nil
     else
-      Time.zone.at(value.to_i)
+      ::Time.zone.at(value.to_i)
     end
   end
 
-  def self.set(value)
+  def serialize(value)
     value.to_i
   end
 end
 
-Time.zone ||= 'UTC'
+::Time.zone ||= 'UTC'

@@ -1,12 +1,10 @@
 module MongoidExt
   module Storage
-    def self.included(model)
-      model.class_eval do
-        extend ClassMethods
+    extend ActiveSupport::Concern
 
-        validate :add_mm_storage_errors
-        file_list :file_list
-      end
+    included do
+      validate :__add_storage_errors
+      file_list :file_list
     end
 
     def put_file(name, io, options = {})
@@ -29,12 +27,12 @@ module MongoidExt
       file_list.files
     end
 
-    def mm_storage_errors
-      @mm_storage_errors ||= {}
+    def storage_errors
+      @storage_errors ||= {}
     end
 
-    def add_mm_storage_errors
-      mm_storage_errors.each do |k, msgs|
+    def __add_storage_errors
+      storage_errors.each do |k, msgs|
         msgs.each do |msg|
           self.errors.add(k, msg)
         end
@@ -53,11 +51,12 @@ module MongoidExt
 
           if list.nil?
             list = self[name] = MongoidExt::FileList.new
-          elsif list.class == BSON::OrderedHash || list.class == Hash
+          elsif list.class == BSON::OrderedHash || list.class == ::Hash
             list = self[name] = MongoidExt::FileList.new(list)
           end
 
           list.parent_document = self
+          list.list_name = name
           list
         end
 
@@ -89,10 +88,11 @@ module MongoidExt
           end
 
           if self.errors[name].blank?
-            send(opts[:in]).get(name.to_s).put(name.to_s, file)
+            fl = send(opts[:in])
+            fl.get(name.to_s).put(name.to_s, file)
           else
             # we store the errors here because we want to validate before storing the file
-            mm_storage_errors.merge!(self.errors)
+            storage_errors.merge!(self.errors)
           end
         end
 

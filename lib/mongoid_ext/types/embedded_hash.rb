@@ -1,11 +1,24 @@
 class EmbeddedHash < Hash
+  include Mongoid::Fields::Serializable
   include ActiveModel::Validations
 
   def initialize(other = {})
-    other.each do |k,v|
-      self[k] = v
+    super()
+
+    if other
+      other.each do |k,v|
+        self[k] = v
+      end
     end
-    self["_id"] ||= BSON::ObjectId.new.to_s
+
+    self.assign_id
+  end
+
+  def self.allocate
+    obj = super
+    obj.assign_id
+
+    obj
   end
 
   def self.field(name, opts = {})
@@ -19,7 +32,25 @@ class EmbeddedHash < Hash
   end
 
   def id
-      self["_id"]
+    self["_id"]
   end
   alias :_id :id
+
+  def serialize(v)
+    v
+  end
+
+  def deserialize(v)
+    self.class.new(v)
+  end
+
+#   def method_missing(name, *args, &block)
+#     @table.send(name, *args, &block)
+#   end
+
+  def assign_id
+    if fetch("_id", nil).nil?
+      self["_id"] = BSON::ObjectId.new.to_s
+    end
+  end
 end

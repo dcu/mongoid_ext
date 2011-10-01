@@ -1,11 +1,13 @@
 require 'ostruct'
 
 class OpenStruct
-  def self.set(value)
+  include Mongoid::Fields::Serializable
+
+  def serialize(value)
     value.nil? ? nil : value.to_hash
   end
 
-  def self.get(value)
+  def deserialize(value)
     value.nil? ? nil : OpenStruct.new(value || {})
   end
 
