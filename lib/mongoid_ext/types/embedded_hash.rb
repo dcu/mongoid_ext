@@ -23,7 +23,11 @@ class EmbeddedHash < Hash
 
   def self.field(name, opts = {})
     define_method(name) do
-      self[name.to_s] ||= opts[:default].kind_of?(Proc) ? opts[:default].call : opts[:default]
+      if fetch(name.to_s, nil).nil?
+        self[name.to_s] = opts[:default].kind_of?(Proc) ? opts[:default].call : opts[:default]
+      else
+        self[name.to_s]
+      end
     end
 
     define_method("#{name}=") do |v|
