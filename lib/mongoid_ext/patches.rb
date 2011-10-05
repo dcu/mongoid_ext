@@ -15,3 +15,16 @@ module Mongo
     end
   end
 end
+
+module Mongoid
+  module Document
+    def self.included(base)
+      models << base.to_s
+      super
+    end
+
+    def self.models
+      @models ||= []
+    end
+  end
+end
