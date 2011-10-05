@@ -63,7 +63,11 @@ module MongoidExt
         set_callback(:create, :after) do |doc|
           l = doc.send(name)
           l.sync_files
-          doc.save(:validate => false)
+
+          query = doc._updates
+          if !query.blank?
+            doc.collection.update({:_id => doc.id}, query)
+          end
         end
 
         set_callback(:destroy, :before) do |doc|
