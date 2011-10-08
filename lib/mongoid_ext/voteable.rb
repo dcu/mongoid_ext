@@ -46,12 +46,12 @@ module MongoidExt
 
     def add_vote!(value, voter_id, &block)
       if embedded?
-        updates = {self._position+".votes_count" => 1,
-                   self._position+".votes_average" => value.to_i}
+        updates = {self.atomic_position+".votes_count" => 1,
+                   self.atomic_position+".votes_average" => value.to_i}
         if value == 1
-          updates[self._position+".votes_up"] = 1
+          updates[self.atomic_position+".votes_up"] = 1
         elsif value == -1
-          updates[self._position+".votes_down"] = 1
+          updates[self.atomic_position+".votes_down"] = 1
         end
 
         self._parent.increment(updates)
@@ -73,12 +73,12 @@ module MongoidExt
 
     def remove_vote!(value, voter_id, &block)
       if embedded?
-        updates = {self._position+".votes_count" => -1,
-                   self._position+".votes_average" => -value.to_i}
+        updates = {self.atomic_position+".votes_count" => -1,
+                   self.atomic_position+".votes_average" => -value.to_i}
         if value == 1
-          updates[self._position+".votes_up"] = -1
+          updates[self.atomic_position+".votes_up"] = -1
         elsif value == -1
-          updates[self._position+".votes_down"] = -1
+          updates[self.atomic_position+".votes_down"] = -1
         end
 
         self._parent.increment(updates)
