@@ -93,6 +93,11 @@ module MongoidExt
 
           if self.errors[name].blank?
             fl = send(opts[:in])
+
+            if file.kind_of?(String)
+              file = StringIO.new(file)
+            end
+
             fl.get(name.to_s).put(name.to_s, file)
           else
             # we store the errors here because we want to validate before storing the file
