@@ -12,16 +12,14 @@ module MongoidExt
 
     end
 
-    module InstanceMethods
-      def raw_save(opts = {})
-        return true if !changed? && !opts.delete(:force)
+    def raw_save(opts = {})
+      return true if !changed? && !opts.delete(:force)
 
-        if (opts.delete(:validate) != false || valid?)
-          self.collection.save(raw_attributes, opts)
-          true
-        else
-          false
-        end
+      if (opts.delete(:validate) != false || valid?)
+        self.collection.save(raw_attributes, opts)
+        true
+      else
+        false
       end
     end
   end

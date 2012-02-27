@@ -54,38 +54,37 @@ module MongoidExt
       end
     end
 
-    module InstanceMethods
-      def unset(update)
-        self.class.unset({:_id => id}, update)
-      end
+    #InstanceMethods
+    def unset(update)
+      self.class.unset({:_id => id}, update)
+    end
 
-      def increment(update)
-        self.class.increment({:_id => id}, update)
-      end
+    def increment(update)
+      self.class.increment({:_id => id}, update)
+    end
 
-      def decrement(update)
-        self.class.decrement({:_id => id}, update)
-      end
+    def decrement(update)
+      self.class.decrement({:_id => id}, update)
+    end
 
-      def override(update)
-        self.class.override({:_id => id}, update)
-      end
+    def override(update)
+      self.class.override({:_id => id}, update)
+    end
 
-      def push(update)
-        self.class.push({:_id => id}, update)
-      end
+    def push(update)
+      self.class.push({:_id => id}, update)
+    end
 
-      def pull(update)
-        self.class.pull({:_id => id}, update)
-      end
+    def pull(update)
+      self.class.pull({:_id => id}, update)
+    end
 
-      def push_uniq(update)
-        self.class.push_uniq({:_id => id}, update)
-      end
+    def push_uniq(update)
+      self.class.push_uniq({:_id => id}, update)
+    end
 
-      def pop(update)
-        self.class.pop({:_id => id}, update)
-      end
+    def pop(update)
+      self.class.pop({:_id => id}, update)
     end
   end
 end

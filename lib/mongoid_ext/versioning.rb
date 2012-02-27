@@ -3,7 +3,6 @@ module Versioning
   def self.included(klass)
     klass.class_eval do
       extend ClassMethods
-      include InstanceMethods
 
       cattr_accessor :versionable_options
 
@@ -17,92 +16,90 @@ module Versioning
     end
   end
 
-  module InstanceMethods
-    def rollback!(pos = nil)
-      pos = self.versions_count-1 if pos.nil?
-      version = self.version_at(pos)
+  def rollback!(pos = nil)
+    pos = self.versions_count-1 if pos.nil?
+    version = self.version_at(pos)
 
-      if version
-        version.data.each do |key, value|
-          self.send("#{key}=", value)
-        end
-
-        owner_field = self.class.versionable_options[:owner_field]
-        self[owner_field] = version[owner_field] if !self.changes.include?(owner_field)
-        self.updated_at = version.date if self.respond_to?(:updated_at) && !self.updated_at_changed?
+    if version
+      version.data.each do |key, value|
+        self.send("#{key}=", value)
       end
 
-      @rolling_back = true
-      r = save!
-      @rolling_back = false
-      r
+      owner_field = self.class.versionable_options[:owner_field]
+      self[owner_field] = version[owner_field] if !self.changes.include?(owner_field)
+      self.updated_at = version.date if self.respond_to?(:updated_at) && !self.updated_at_changed?
     end
 
-    def load_version(pos = nil)
-      pos = self.versions_count-1 if pos.nil?
-      version = self.version_at(pos)
+    @rolling_back = true
+    r = save!
+    @rolling_back = false
+    r
+  end
 
-      if version
-        version.data.each do |key, value|
-          self.send("#{key}=", value)
-        end
+  def load_version(pos = nil)
+    pos = self.versions_count-1 if pos.nil?
+    version = self.version_at(pos)
+
+    if version
+      version.data.each do |key, value|
+        self.send("#{key}=", value)
       end
     end
+  end
 
-    def diff(key, pos1, pos2, format = :html)
-      version1 = self.version_at(pos1)
-      version2 = self.version_at(pos2)
+  def diff(key, pos1, pos2, format = :html)
+    version1 = self.version_at(pos1)
+    version2 = self.version_at(pos2)
 
-      Differ.diff(version1.content(key), version2.content(key)).format_as(format).html_safe
-    end
+    Differ.diff(version1.content(key), version2.content(key)).format_as(format).html_safe
+  end
 
-    def diff_by_word(key, pos1, pos2, format = :html)
-      version1 = self.version_at(pos1)
-      version2 = self.version_at(pos2)
+  def diff_by_word(key, pos1, pos2, format = :html)
+    version1 = self.version_at(pos1)
+    version2 = self.version_at(pos2)
 
-      Differ.diff_by_word(version1.content(key), version2.content(key)).format_as(format).html_safe
-    end
+    Differ.diff_by_word(version1.content(key), version2.content(key)).format_as(format).html_safe
+  end
 
-    def diff_by_line(key, pos1, pos2, format = :html)
-      version1 = self.version_at(pos1)
-      version2 = self.version_at(pos2)
+  def diff_by_line(key, pos1, pos2, format = :html)
+    version1 = self.version_at(pos1)
+    version2 = self.version_at(pos2)
 
-      Differ.diff_by_line(version1.content(key), version2.content(key)).format_as(format).html_safe
-    end
+    Differ.diff_by_line(version1.content(key), version2.content(key)).format_as(format).html_safe
+  end
 
-    def diff_by_char(key, pos1, pos2, format = :html)
-      version1 = self.version_at(pos1)
-      version2 = self.version_at(pos2)
+  def diff_by_char(key, pos1, pos2, format = :html)
+    version1 = self.version_at(pos1)
+    version2 = self.version_at(pos2)
 
-      Differ.diff_by_char(version1.content(key), version2.content(key)).format_as(format).html_safe
-    end
+    Differ.diff_by_char(version1.content(key), version2.content(key)).format_as(format).html_safe
+  end
 
-    def current_version
-      version_klass.new(:data => self.attributes, self.class.versionable_options[:owner_field] => (self.updated_by_id_was || self.updated_by_id), :created_at => Time.now)
-    end
+  def current_version
+    version_klass.new(:data => self.attributes, self.class.versionable_options[:owner_field] => (self.updated_by_id_was || self.updated_by_id), :created_at => Time.now)
+  end
 
-    def version_at(pos)
-      case pos.to_s
-      when "current"
-        current_version
-      when "first"
-        version_klass.find(self.version_ids.first)
-      when "last"
-        version_klass.find(self.version_ids.last)
-      else
-        if version_id = self.version_ids[pos]
-          version_klass.find(self.version_ids[pos])
-        end
+  def version_at(pos)
+    case pos.to_s
+    when "current"
+      current_version
+    when "first"
+      version_klass.find(self.version_ids.first)
+    when "last"
+      version_klass.find(self.version_ids.last)
+    else
+      if version_id = self.version_ids[pos]
+        version_klass.find(self.version_ids[pos])
       end
     end
+  end
 
-    def versions
-      version_klass.where(:target_id => self.id)
-    end
+  def versions
+    version_klass.where(:target_id => self.id)
+  end
 
-    def version_klass
-      self.class.version_klass
-    end
+  def version_klass
+    self.class.version_klass
   end
 
   module ClassMethods

@@ -7,9 +7,6 @@ module MongoidExt
 
     module ClassMethods
     end
-
-    module InstanceMethods
-    end
   end
 end
 Mongoid::Criteria.send(:include, MongoidExt::CriteriaExt)
