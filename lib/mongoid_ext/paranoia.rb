@@ -86,7 +86,7 @@ module MongoidExt #:nodoc:
           end
 
           def self.compact!(date = 1.month.ago)
-            self.delete_all(:created_at.lte => date)
+            self.delete_all(:created_at => {:$lte => date.to_time})
           end
 
           private

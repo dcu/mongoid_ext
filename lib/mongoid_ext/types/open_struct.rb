@@ -1,17 +1,19 @@
 require 'ostruct'
 
-class OpenStruct
-  include Mongoid::Fields::Serializable
+module MongoidExt
+  class OpenStruct < ::OpenStruct
+    include Mongoid::Fields::Serializable
 
-  def serialize(value)
-    value.nil? ? nil : value.to_hash
-  end
+    def serialize(value)
+      value.nil? ? nil : value.to_hash
+    end
 
-  def deserialize(value)
-    value.nil? ? nil : OpenStruct.new(value || {})
-  end
+    def deserialize(value)
+      value.nil? ? nil : OpenStruct.new(value || {})
+    end
 
-  def to_hash
-    send(:table)
+    def to_hash
+      send(:table)
+    end
   end
 end

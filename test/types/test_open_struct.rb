@@ -11,7 +11,7 @@ class OpenStructTest < Test::Unit::TestCase
     end
 
     should "allow to add new keys" do
-      entries = OpenStruct.new()
+      entries = MongoidExt::OpenStruct.new()
       entries.new_key = "my new key"
       @config.entries = entries
       @config.save

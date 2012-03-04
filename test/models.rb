@@ -41,7 +41,7 @@ end
 
 class UserConfig #for OpenStruct
   include Mongoid::Document
-  field :entries, :type => OpenStruct
+  field :entries, :type => MongoidExt::OpenStruct
 end
 
 class User
