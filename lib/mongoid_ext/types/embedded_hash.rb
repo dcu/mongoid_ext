@@ -1,5 +1,4 @@
 class EmbeddedHash < Hash
-  include Mongoid::Fields::Serializable
   include ActiveModel::Validations
 
   def initialize(other = {})
@@ -40,12 +39,12 @@ class EmbeddedHash < Hash
   end
   alias :_id :id
 
-  def serialize(v)
+  def self.mongoize(v)
     v
   end
 
-  def deserialize(v)
-    self.class.new(v)
+  def self.demongoize(v)
+    self.new(v)
   end
 
 #   def method_missing(name, *args, &block)
@@ -54,7 +53,7 @@ class EmbeddedHash < Hash
 
   def assign_id
     if fetch("_id", nil).nil?
-      self["_id"] = BSON::ObjectId.new.to_s
+      self["_id"] = Moped::BSON::ObjectId.new.to_s
     end
   end
 end

@@ -15,7 +15,8 @@ module MongoidExt
         extend ClassMethods
         extend Finder
 
-        field :slug, :type => String, :index => true
+        field :slug, :type => String
+        index({:slug => 1})
       end
     end
 

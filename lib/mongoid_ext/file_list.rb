@@ -44,11 +44,11 @@ module MongoidExt
       end
 
       id = id.to_s.gsub(".", "_")
-      file = self.fetch(id, nil)
+      file = self[id]
 
       if file.nil?
         file = self[id] = MongoidExt::File.new
-      elsif file.class == ::Hash || file.class == BSON::OrderedHash
+      elsif !file.kind_of?(MongoidExt::File) && file.kind_of?(::Hash)
         file = self[id] = MongoidExt::File.new(file)
       end
 
@@ -80,11 +80,13 @@ module MongoidExt
       end
     end
 
-    def serialize(v)
-      v
+    def self.mongoize(v)
+      Hash[v]
     end
 
-    def deserialize(v)
+    def self.demongoize(v)
+      return if v.nil?
+
       doc = self.class.new
       v.each do |k,v|
         doc[k] = MongoidExt::File.new(v)

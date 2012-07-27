@@ -50,7 +50,7 @@ module MongoidExt
 
       private
       def _apply_modifier(modifier, conditions, update)
-        collection.update(conditions, {modifier => update}, :multi => true)
+        collection.find(conditions).update_all({modifier => update})
       end
     end
 

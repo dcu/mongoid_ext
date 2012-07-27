@@ -11,7 +11,7 @@ module MongoidExt
         extend ClassMethods
 
         field :_keywords, :type => Set, :default => Set.new
-        index :_keywords
+        index({:_keywords => 1})
 
         before_save :_update_keywords
 
@@ -55,12 +55,27 @@ module MongoidExt
         query = Mongoid::Criteria.new(self)
         conds = query.where(opts).where(conds).selector
 
-        results = self.db.nolock_eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, conds, {:words => parsed_query[:words].to_a, :stemmed => parsed_query[:stemmed].to_a, :limit => limit, :min_score => min_score, :select => select })
+        retval = Mongoid.session(:default).command({
+          :eval => "function(collection, q, config) { return filter(collection, q, config); }", 
+          :args => [
+            self.collection_name, 
+            conds, 
+            {
+              :words => parsed_query[:words].to_a, 
+              :stemmed => parsed_query[:stemmed].to_a, 
+              :limit => limit, 
+              :min_score => min_score, 
+              :select => select 
+            }
+          ]
+        })['retval']
+        results = retval['results']
 
-        pagination = MongoidExt::Filter::ResultSet.new(results["total_entries"], parsed_query, conds, page, limit)
+        pagination = MongoidExt::Filter::ResultSet.new(retval["total_entries"], parsed_query, conds, page, limit)
 
-        pagination.subject = results['results'].map do |result|
+        pagination.subject = results.map do |result|
           item = self.new(result['doc'])
+          item.id = result['doc']['_id']
           item.search_score = result['score']
 
           item

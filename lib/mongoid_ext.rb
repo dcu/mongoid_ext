@@ -1,10 +1,13 @@
 $:.unshift File.dirname(__FILE__)
+require 'bundler/setup'
 
 if RUBY_VERSION =~ /^1\.8/
   $KCODE = 'u'
 end
 
+Bundler.require
 require 'mongoid'
+require 'mongoid-grid_fs'
 require 'uuidtools'
 require 'differ'
 require 'active_support/inflector'
@@ -56,6 +59,8 @@ require 'mongoid_ext/modifiers'
 
 module MongoidExt
   def self.init
+    Mongoid::GridFS.file_model.field :_id, :type => String # to keep backwards compat
+    Mongoid.allow_dynamic_fields = true
     load_jsfiles(::File.dirname(__FILE__)+"/mongoid_ext/js")
   end
 
@@ -65,7 +70,9 @@ module MongoidExt
       name = ::File.basename(js_path, ".js")
 
       # HACK: looks like ruby driver doesn't support this
-      Mongoid.master.eval("db.system.js.save({_id: '#{name}', value: #{code}})")
+      Mongoid.sessions.each do |session_name, _|
+        Mongoid.session(session_name).command(:eval => "db.system.js.save({_id: '#{name}', value: #{code}})")
+      end
     end
   end
 end

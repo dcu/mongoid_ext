@@ -41,22 +41,29 @@ module MongoidExt
 
     module ClassMethods
       def gridfs
-        @gridfs ||= Mongo::Grid.new(self.db)
+        @gridfs ||= Mongoid::GridFS
       end
 
       def file_list(name)
         field name, :type => MongoidExt::FileList
+
         define_method(name) do
+          varname = "@file_list_#{name}"
+
+          return instance_variable_get(varname) if instance_variable_get(varname)
+
           list = self[name]
 
           if list.nil?
             list = self[name] = MongoidExt::FileList.new
-          elsif list.class == BSON::OrderedHash || list.class == ::Hash
+          elsif list.kind_of?(::Hash)
             list = self[name] = MongoidExt::FileList.new(list)
           end
 
           list.parent_document = self
           list.list_name = name
+
+          instance_variable_set(varname, list)
           list
         end
 
@@ -66,7 +73,7 @@ module MongoidExt
 
           query = doc._updates
           if !query.blank?
-            doc.collection.update({:_id => doc.id}, query)
+            doc.collection.find(:_id => doc.id).update(query, {:multi => true})
           end
         end
 

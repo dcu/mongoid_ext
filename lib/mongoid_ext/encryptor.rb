@@ -25,7 +25,7 @@ module MongoidExt
           marshaled = Marshal.dump(v)
           enc_value = ::Encryptor.encrypt(marshaled, :key => key).unpack('H*')[0]
 
-          write_attribute(name, enc_value)
+          attributes[name.to_s] = enc_value
         end
       end
     end

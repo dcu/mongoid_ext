@@ -11,7 +11,7 @@ class StorageTest < Test::Unit::TestCase
       @avatar.put_file("an_avatar.png", @data)
       @avatar.save
       avatar = Avatar.find(@avatar.id)
-      data = avatar.fetch_file("an_avatar.png").read
+      data = avatar.fetch_file("an_avatar.png").data
       data.should == "my avatar image"
     end
 
@@ -25,7 +25,7 @@ class StorageTest < Test::Unit::TestCase
         @avatar.data = @data
         @avatar.save!
         @avatar.data.should_not be_nil
-        @avatar.data.read.should == "my avatar image"
+        @avatar.data.data.should == "my avatar image"
       end
     end
 
@@ -38,18 +38,18 @@ class StorageTest < Test::Unit::TestCase
         @avatar.data = @data
         @avatar.save
         @avatar = Avatar.find(@avatar.id)
-        @avatar.data.read.should == "my avatar image"
+        @avatar.data.data.should == "my avatar image"
       end
 
       should "store the file after saving" do
         @avatar.put_file("an_avatar.png", @data)
         @avatar.save
-        @avatar.fetch_file("an_avatar.png").read.should == "my avatar image"
+        @avatar.fetch_file("an_avatar.png").data.should == "my avatar image"
       end
 
       should "not store the file if object is new" do
         @avatar.put_file("an_avatar.png", @data)
-        @avatar.fetch_file("an_avatar.png").read.should be_nil
+        @avatar.fetch_file("an_avatar.png").data.should be_nil
       end
     end
 
@@ -67,14 +67,14 @@ class StorageTest < Test::Unit::TestCase
         @avatar.first_alternative = @alternative
         @avatar.save
         fromdb = @avatar.reload
-        fromdb.first_alternative.read.should == @data
+        fromdb.first_alternative.data.should == @data
       end
 
       should "store the file in the alternative list" do
         @avatar.alternatives.put("an_alternative", @alternative)
         @avatar.save
         @avatar.reload
-        @avatar.alternatives.get("an_alternative").read.should == @data
+        @avatar.alternatives.get("an_alternative").data.should == @data
       end
     end
   end

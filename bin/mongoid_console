@@ -18,10 +18,16 @@ irb.context.evaluate("require 'irb/completion'", 0)
 irb.context.evaluate(%@
 include Mongoid
 
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("test")
+env = ENV['RACK_ENV'] || ENV['RAILS_ENV'] || ENV['PADRINO_ENV'] || 'development'
+
+if File.exist?("config/mongoid.yml")
+  Mongoid.load!("config/mongoid.yml", env)
+elsif File.exist?("test/mongoid.yml")
+  Mongoid.load!("test/mongoid.yml", env)
+elsif File.exist?("spec/mongoid.yml")
+  Mongoid.load!("test/mongoid.yml", env)
 end
-$db = Mongoid.config.database
+$db = Mongoid.session("default")
 
 @, 0)
 

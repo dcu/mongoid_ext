@@ -6,8 +6,8 @@ module MongoidExt
       field :_random, :type => Float, :default => lambda{rand}
       field :_random_times, :type => Float, :default => 0.0
 
-      index :_random
-      index :_random_times
+      index({:_random => 1})
+      index({:_random_times => 1})
     end
 
     module ClassMethods

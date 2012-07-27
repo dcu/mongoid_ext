@@ -24,7 +24,7 @@ class StorageTest < Test::Unit::TestCase
     should "not fail with nil values" do
       @cc.data = nil
       @cc.save
-      @cc.reload
+      @cc = CreditCard.find(@cc.id)
       @cc.data.should == nil
     end
   end

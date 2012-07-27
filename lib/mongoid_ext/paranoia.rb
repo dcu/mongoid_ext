@@ -75,7 +75,8 @@ module MongoidExt #:nodoc:
           cattr_accessor :parent_class
           self.parent_class = parent_klass
 
-          self.collection_name = "#{self.parent_class.collection_name}.trash"
+          collection_name = "#{self.parent_class.collection.name}.trash"
+          self.storage_options = {:collection => collection_name}
 
           field :document, :type => Hash
 

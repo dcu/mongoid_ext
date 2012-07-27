@@ -69,7 +69,7 @@ class BlogPost # for Slug and Filter
   field :tags, :type => Array
   field :date, :type => Time
 
-  referenced_in :updated_by, :class_name => "User"
+  belongs_to :updated_by, :class_name => "User"
 
   versionable_keys :title, :body, :tags, :owner_field => "updated_by_id", :max_versions => 2
 

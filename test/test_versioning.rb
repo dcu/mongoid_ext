@@ -6,10 +6,10 @@ class TestVersioning < Test::Unit::TestCase
       BlogPost.delete_all
       User.delete_all
 
-      @blogpost = BlogPost.create(:title => "operating systems",
-                                  :body => "list of some operating systems",
-                                  :tags => %w[list windows freebsd osx linux],
-                                  :updated_by => User.create(:login => "foo"))
+      @blogpost = BlogPost.create!(:title => "operating systems",
+                                   :body => "list of some operating systems",
+                                   :tags => %w[list windows freebsd osx linux],
+                                   :updated_by => User.create(:login => "foo"))
     end
 
     should "generate a new version" do

@@ -112,15 +112,16 @@ module Versioning
         cattr_accessor :parent_class
         self.parent_class = parent_klass
 
-        self.collection_name = "#{self.parent_class.collection_name}.versions"
+        self.storage_options = {
+          :collection => "#{self.parent_class.collection_name}.versions"
+        }
 
-        identity :type => String
         field :message, :type => String
         field :data, :type => Hash
 
-        referenced_in :owner, :class_name => parent_klass.versionable_options[:user_class]
+        belongs_to :owner, :class_name => parent_klass.versionable_options[:user_class]
 
-        referenced_in :target, :polymorphic => true
+        belongs_to :target, :polymorphic => true
 
         after_create :add_version
 
@@ -180,7 +181,7 @@ module Versioning
         end
 
         uuser_id = send(self.versionable_options[:owner_field]+"_was")||send(self.versionable_options[:owner_field])
-        if !self.new? && !data.empty? && uuser_id
+        if !self.new_record? && !data.empty? && uuser_id
           max_versions = self.versionable_options[:max_versions].to_i
           if max_versions > 0 && self.version_ids.size >= max_versions
             old = self.version_ids.slice!(0, max_versions-1)
@@ -190,7 +191,7 @@ module Versioning
             self.class.set_callback(:save, :before, :save_version)
           end
 
-          self.version_klass.create({
+          self.version_klass.create!({
             'data' => data,
             'owner_id' => uuser_id,
             'target' => self,

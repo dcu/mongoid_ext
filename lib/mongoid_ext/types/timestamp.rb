@@ -1,7 +1,5 @@
 class Timestamp
-  include Mongoid::Fields::Serializable
-
-  def deserialize(value)
+  def self.demongoize(value)
     if value.nil? || value == ''
       nil
     else
@@ -9,7 +7,7 @@ class Timestamp
     end
   end
 
-  def serialize(value)
+  def self.mongoize(value)
     value.to_i
   end
 end

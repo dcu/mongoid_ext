@@ -47,16 +47,13 @@ module MongoidExt
       gridfs.put(io, options)
 
       if file = self.get
-        file.send(:get_md5)
-        self['md5'] = file.server_md5
+        self['md5'] = file.md5
       end
     end
 
     def get
       @io ||= begin
         gridfs.get(grid_filename)
-      rescue Mongo::GridFileNotFound
-        return nil
       end
     end
 
@@ -77,7 +74,29 @@ module MongoidExt
     end
 
     def read(size = nil)
-      self.get.read(size) rescue nil
+      if size != nil
+        puts "#{__FILE__}:#{__LINE__} Passing size to read() is deprecated and will be removed soon. Use .each {} to read in blocks."
+      end
+
+      self.get.data
+    end
+
+    def data
+      if self.get
+        self.get.data
+      else
+        puts "WARNING: the file you are trying to read doesn't exist: #{self.inspect}"
+        nil
+      end
+    end
+
+    def each(&block)
+      if self.get
+        self.get.each(&block)
+      else
+        puts "WARNING: the file you are trying to read doesn't exist: #{self.inspect}"
+        nil
+      end
     end
 
     def delete
@@ -85,14 +104,14 @@ module MongoidExt
       gridfs.delete(grid_filename)
     end
 
-    def method_missing(name, *args, &block)
-      f = self.get
-      if f && f.respond_to?(name)
-        f.send(name, *args, &block)
-      else
-        super(name, *args, &block)
-      end
-    end
+    #def method_missing(name, *args, &block)
+      #f = self.get
+      #if f && f.respond_to?(name)
+        #f.send(name, *args, &block)
+      #else
+        #super(name, *args, &block)
+      #end
+    #end
 
     protected
     def gridfs

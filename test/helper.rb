@@ -7,6 +7,7 @@ require 'shoulda'
 require 'timecop'
 require 'mocha'
 require 'pp'
+require 'pry'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -14,11 +15,9 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'support/custom_matchers'
 require 'mongoid_ext'
 
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("test")
-end
-
+Mongoid.load!("test/mongoid.yml", "test")
 require 'models'
+
 
 class Test::Unit::TestCase
   include CustomMatchers
