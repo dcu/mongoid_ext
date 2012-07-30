@@ -15,7 +15,7 @@ module MongoidExt
       if self[:votes] && !self[:votes].empty?
         self[:votes].include?(voter_id)
       else
-        self.class.exists?(:conditions => {:_id => self.id, :"votes.#{voter_id}".exists => true})
+        self.class.where({:_id => self.id, :"votes.#{voter_id}".exists => true}).exists?
       end
     end
 
