@@ -20,10 +20,13 @@ module MongoidExt
     end
 
     def vote!(value, voter_id, &block)
+      value = value.to_i
+      voter_id = voter_id.to_s
+
       old_vote = self.votes[voter_id]
       if !old_vote
         self.votes[voter_id] = value
-        self.save(:validate => false)
+        self.save
 
         add_vote!(value, voter_id, &block)
         return :created
