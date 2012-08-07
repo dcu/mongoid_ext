@@ -26,23 +26,25 @@ module MongoidExt
       old_vote = self.votes[voter_id]
       if !old_vote
         self.votes[voter_id] = value
-        self.save
-
-        add_vote!(value, voter_id, &block)
-        return :created
+        if self.save
+          add_vote!(value, voter_id, &block)
+          return :created
+        end
       else
         if(old_vote != value)
           self.votes[voter_id] = value
-          self.save
-          self.remove_vote!(old_vote, voter_id, &block)
-          self.add_vote!(value, voter_id, &block)
+          if self.save
+            self.remove_vote!(old_vote, voter_id, &block)
+            self.add_vote!(value, voter_id, &block)
 
-          return :updated
+            return :updated
+          end
         else
           self.votes.delete(voter_id)
-          self.save(:validate => false)
-          remove_vote!(value, voter_id, &block)
-          return :destroyed
+          if self.save
+            remove_vote!(value, voter_id, &block)
+            return :destroyed
+          end
         end
       end
     end
