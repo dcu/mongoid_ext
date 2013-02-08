@@ -58,10 +58,8 @@ class FileServer
   end
 
   def each
-    f = @file.get
-    while part = f.read(8192)
+    @file.each do |part|
       yield part
-      break if part.empty?
     end
   end
 end
