@@ -53,7 +53,15 @@ module MongoidExt
 
     def get
       @io ||= begin
-        gridfs.get(grid_filename)
+        io = nil
+        begin
+          io = gridfs.get(grid_filename)
+          def io.read
+            self.data
+          end
+        rescue Mongoid::Errors::DocumentNotFound => e
+        end
+        io
       end
     end
 
