@@ -1,6 +1,6 @@
-source :gemcutter
+source "https://rubygems.org"
 
-gem 'mongoid', '~> 3'
+gem 'mongoid'
 gem 'uuidtools', '>= 2.1.1'
 gem 'i18n'
 gem 'tzinfo'
