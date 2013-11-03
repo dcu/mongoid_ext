@@ -27,7 +27,10 @@ module MongoidExt
     protected
 
     def generate_slug
-      return false if self[self.class.slug_key].blank?
+      if self[self.class.slug_key].blank?
+        Mongoid.logger.warn "Can't generate a slug because the given slug key is blank"
+        return false
+      end
       max_length = self.class.slug_options[:max_length]
       min_length = self.class.slug_options[:min_length] || 0
 
