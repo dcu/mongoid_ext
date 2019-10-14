@@ -10,7 +10,7 @@ gem 'rack'
 gem 'mongoid-grid_fs'
 
 group :development do
-  gem "yard", "~> 0.6.0"
+  gem "yard", "~> 0.9.20"
   gem "jeweler", "~> 1.8.4"
 
   gem "shoulda", "~> 2.11.3"
