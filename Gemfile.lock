@@ -36,7 +36,6 @@ GEM
       rake
       rdoc
     jnunemaker-matchy (0.4.0)
-    json (1.8.1)
     jwt (0.1.8)
       multi_json (>= 1.5)
     metaclass (0.0.1)
@@ -71,8 +70,7 @@ GEM
       slop (~> 3.4)
     rack (1.5.2)
     rake (10.1.0)
-    rdoc (4.0.1)
-      json (~> 1.4)
+    rdoc (6.3.2)
     shoulda (2.11.3)
     slop (3.4.6)
     timecop (0.6.3)
