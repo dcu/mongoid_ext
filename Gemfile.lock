@@ -76,7 +76,7 @@ GEM
     shoulda (2.11.3)
     slop (3.4.6)
     timecop (0.6.3)
-    tzinfo (0.3.38)
+    tzinfo (0.3.61)
     uuidtools (2.1.4)
     yard (0.6.8)
 
